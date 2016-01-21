@@ -1,0 +1,10 @@
+﻿Build started 2016-01-21 23:35:13.
+     1>Project "C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\CatBurglarsLevelEditor\CatBurglarsLevelEditor.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Rasmus\Downloads\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\lib" "sfml-system-d.lib" "sfml-window-d.lib" "sfml-graphics-d.lib" "sfml-network-d.lib" "sfml-audio-d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.lib" /MACHINE:X86 Debug\Main.obj
+         CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe
+     1>Done Building Project "C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\CatBurglarsLevelEditor\CatBurglarsLevelEditor.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.34
