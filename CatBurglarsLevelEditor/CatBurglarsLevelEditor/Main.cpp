@@ -1,22 +1,8 @@
-#include <SFML/Graphics.hpp>
+#include "Editor.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 800), "Cat Burglars Level Editor");
-	
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		
-		window.display();
-	}
-	
+	Editor editor;
+	editor.Run();
 	return 0;
 }
