@@ -2,7 +2,6 @@
 #define EDITOR_H
 
 #include <SFML/Graphics.hpp>
-#include "Tile.h"
 
 class Editor
 {
@@ -11,10 +10,10 @@ public:
 	~Editor();
 	void Run();
 private:
+	void Update();
+	void Render();
 	sf::RenderWindow *mWindow;
-	typedef vector<Tile*> TileColumn;
-	typedef vector<TileColumn> TileArray;
-	TileArray mTileArray;
+
 };
 
 #endif

@@ -22,9 +22,19 @@ void Editor::Run()
 			if (event.type == sf::Event::Closed)
 				mWindow->close();
 		}
-
-		mWindow->clear();
-
-		mWindow->display();
+		Update();
+		Render();
 	}
+}
+
+void Editor::Update()
+{
+
+}
+
+void Editor::Render()
+{
+	mWindow->clear();
+
+	mWindow->display();
 }
