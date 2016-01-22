@@ -1,10 +1,12 @@
 #include "Editor.h"
 
+sf::RenderWindow *window;
+Map *map;
+static bool startMenu;
+
 Editor::Editor()
 {
-	mMap = new Map();
-	delete mMap;
-	mMap = new Map();
+	Initialize();
 }
 
 Editor::~Editor()
@@ -12,17 +14,23 @@ Editor::~Editor()
 
 }
 
+void Editor::Initialize()
+{
+	UIManager::Initialize();
+	Tile::Initialize();
+}
+
 void Editor::Run()
 {
-	mWindow = new sf::RenderWindow(sf::VideoMode(800, 800), "Cat Burglars Level Editor");
+	window = new sf::RenderWindow(sf::VideoMode(800, 800), "Cat Burglars Level Editor");
 
-	while (mWindow->isOpen())
+	while (window->isOpen())
 	{
 		sf::Event event;
-		while (mWindow->pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				mWindow->close();
+				window->close();
 		}
 		Update();
 		Render();
@@ -36,7 +44,7 @@ void Editor::Update()
 
 void Editor::Render()
 {
-	mWindow->clear();
+	window->clear();
 
-	mWindow->display();
+	window->display();
 }

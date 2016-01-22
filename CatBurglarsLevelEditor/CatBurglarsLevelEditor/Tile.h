@@ -8,7 +8,8 @@ class Tile : public Entity
 public:
 	Tile();
 	~Tile();
-	void Render();
+	void Render(sf::RenderWindow *window);
+	static void Initialize();
 	sf::Vector2i GetSize();
 	void SetID(int ID);
 	int GetID();

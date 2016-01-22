@@ -10,9 +10,10 @@ class Entity
 public:
 	Entity();
 	~Entity();
-	virtual void Render() = 0;
+	virtual void Render(sf::RenderWindow *window) = 0;
 protected:
 	sf::Vector2i mPosition;
+	sf::Sprite mSprite;
 };
 
 #endif

@@ -8,6 +8,8 @@ class UIObject : public Entity
 public:
 	UIObject();
 	~UIObject();
+	void Render(sf::RenderWindow *window);
+	static void Initialize();
 };
 
 #endif
