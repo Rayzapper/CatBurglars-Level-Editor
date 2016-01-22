@@ -1,10 +1,13 @@
 #include "UIManager.h"
 
-UIObject *startScreenUIBase, *startScreenButtonNew, *startScreenButtonLoad;
+UIObject *startScreenUIBase;
+UIButton *startScreenButtonNew, *startScreenButtonLoad;
 
 UIManager::UIManager()
 {
-
+	startScreenUIBase = new UIObject();
+	startScreenButtonNew = new UIButton();
+	startScreenButtonLoad = new UIButton();
 }
 
 UIManager::~UIManager()
@@ -14,7 +17,7 @@ UIManager::~UIManager()
 	delete startScreenButtonLoad;
 }
 
-void UIManager::Render()
+void UIManager::Render(bool start)
 {
 
 }

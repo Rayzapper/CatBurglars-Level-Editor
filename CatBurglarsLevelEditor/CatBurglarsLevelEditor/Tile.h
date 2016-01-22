@@ -15,6 +15,7 @@ public:
 	int GetID();
 private:
 	int mTileID = 0;
+	sf::IntRect mHitBox;
 };
 
 #endif

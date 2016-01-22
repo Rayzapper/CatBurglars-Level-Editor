@@ -2,6 +2,7 @@
 
 sf::RenderWindow *window;
 Map *map;
+UIManager *ui;
 static bool startMenu;
 
 Editor::Editor()
@@ -11,7 +12,7 @@ Editor::Editor()
 
 Editor::~Editor()
 {
-
+	delete ui;
 }
 
 void Editor::Initialize()
@@ -23,6 +24,7 @@ void Editor::Initialize()
 void Editor::Run()
 {
 	window = new sf::RenderWindow(sf::VideoMode(800, 800), "Cat Burglars Level Editor");
+	ui = new UIManager();
 
 	while (window->isOpen())
 	{
