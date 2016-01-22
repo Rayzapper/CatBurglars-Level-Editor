@@ -9,6 +9,11 @@ public:
 	Tile();
 	~Tile();
 	void Render();
+	sf::Vector2i GetSize();
+	void SetID(int ID);
+	int GetID();
+private:
+	int mTileID = 0;
 };
 
 #endif

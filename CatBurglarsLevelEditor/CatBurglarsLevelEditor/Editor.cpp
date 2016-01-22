@@ -2,7 +2,9 @@
 
 Editor::Editor()
 {
-
+	mMap = new Map();
+	delete mMap;
+	mMap = new Map();
 }
 
 Editor::~Editor()

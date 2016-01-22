@@ -6,7 +6,7 @@
 class Map
 {
 public:
-	Map();
+	Map(int x, int y);
 	~Map();
 	void Update();
 	void Render();

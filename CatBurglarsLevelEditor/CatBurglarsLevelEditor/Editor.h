@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <SFML/Graphics.hpp>
+#include "Map.h"
 
 class Editor
 {
@@ -13,7 +14,7 @@ private:
 	void Update();
 	void Render();
 	sf::RenderWindow *mWindow;
-
+	Map *mMap;
 };
 
 #endif
