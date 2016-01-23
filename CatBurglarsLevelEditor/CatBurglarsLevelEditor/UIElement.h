@@ -6,11 +6,11 @@
 class UIElement : public Entity
 {
 public:
-	UIElement(sf::Vector2i position);
+	UIElement(sf::Vector2i position, int width, int height, int textureID, TextureHandler *textures);
 	~UIElement();
 	void Update();
 	void Render();
-	static void Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow);
+	static void Initialize(sf::RenderWindow *mainWindow);
 };
 
 #endif

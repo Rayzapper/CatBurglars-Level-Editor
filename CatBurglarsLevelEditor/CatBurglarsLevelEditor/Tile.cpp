@@ -3,10 +3,13 @@
 static const int width = 50, height = 50;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
+static TextureHandler *textureHandler;
 
-Tile::Tile(sf::Vector2i position, int ID)
-: Entity(position), mHitBox(position.x, position.y, width, height), mTileID(ID)
+Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures)
+: Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID)
 {
+	textureHandler = textures;
+	texture = textureHandler->GetTexture(textureID);
 	mSprite.setTexture(*texture, true);
 }
 
@@ -26,10 +29,9 @@ void Tile::Render()
 	window->draw(mSprite);
 }
 
-void Tile::Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow)
+void Tile::Initialize(sf::RenderWindow *mainWindow)
 {
 	window = mainWindow;
-	texture = tex;
 }
 
 sf::Vector2i Tile::GetSize(){ return sf::Vector2i(width, height); }

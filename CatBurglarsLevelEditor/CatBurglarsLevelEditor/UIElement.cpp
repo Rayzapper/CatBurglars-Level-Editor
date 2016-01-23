@@ -2,10 +2,13 @@
 
 static sf::Texture *texture;
 static sf::RenderWindow *window;
+static TextureHandler *textureHandler;
 
-UIElement::UIElement(sf::Vector2i position)
-: Entity(position)
+UIElement::UIElement(sf::Vector2i position, int width, int height, int textureID, TextureHandler *textures)
+: Entity(position, sf::IntRect(position.x, position.y, width, height))
 {
+	textureHandler = textures;
+	texture = textureHandler->GetTexture(textureID);
 	mSprite.setTexture(*texture, true);
 	mSprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
 }
@@ -26,8 +29,7 @@ void UIElement::Render()
 	window->draw(mSprite);
 }
 
-void UIElement::Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow)
+void UIElement::Initialize(sf::RenderWindow *mainWindow)
 {
 	window = mainWindow;
-	texture = tex;
 }

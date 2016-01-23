@@ -6,6 +6,7 @@
 #include "Button.h"
 #include "UIElement.h"
 #include "Tile.h"
+#include "TextureHandler.h"
 
 class Editor
 {
@@ -19,6 +20,7 @@ private:
 	void Render();
 	void StartConfiguration();
 	void StartMapSpawn();
+	void UISpawn();
 };
 
 #endif

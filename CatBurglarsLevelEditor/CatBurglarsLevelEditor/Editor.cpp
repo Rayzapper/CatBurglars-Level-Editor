@@ -3,18 +3,20 @@
 static sf::RenderWindow *window;
 static const int screenWidth = 1000, screenHeight = 800;
 static bool startMenu = true, load;
-static sf::Texture tileTexture, sideBarTexture;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 TileLayer tileLayerBottom, tileLayer2, tileLayer3;
 
+static UIElement *sidebar;
+
 static int selectedLayer = 0, currentMapSizeX, currentMapSizeY;
+static TextureHandler textures;
 
 Editor::Editor()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "CatBurglars Level Editor");
-	tileTexture.loadFromFile("Resources/TestTile.png");
+	textures.Initialize();
 	Initialize();
 	StartConfiguration();
 	StartMapSpawn();
@@ -28,13 +30,14 @@ Editor::~Editor()
 
 void Editor::Initialize()
 {
-	UIElement::Initialize(&sideBarTexture, window);
-	Button::Initialize(&tileTexture, window);
-	Tile::Initialize(&tileTexture, window);
+	UIElement::Initialize(window);
+	Button::Initialize(window);
+	Tile::Initialize(window);
 }
 
 void Editor::Run()
 {
+	UISpawn();
 	while (window->isOpen())
 	{
 		sf::Event event;
@@ -74,6 +77,7 @@ void Editor::Render()
 				tileLayerBottom[y][x]->Render();
 			}
 		}
+		sidebar->Render();
 	}
 	window->display();
 }
@@ -111,7 +115,7 @@ void Editor::StartMapSpawn()
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(200 + x * Tile::GetSize().x, y * Tile::GetSize().y), 0);
+				Tile *tile = new Tile(sf::Vector2i(200 + x * Tile::GetSize().x, y * Tile::GetSize().y), 0, 0, &textures);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -121,4 +125,10 @@ void Editor::StartMapSpawn()
 	{
 
 	}
+}
+
+void Editor::UISpawn()
+{
+	sf::Vector2i sidebarPosition(100, screenHeight / 2);
+	sidebar = new UIElement(sidebarPosition, 200, 800, 1, &textures);
 }

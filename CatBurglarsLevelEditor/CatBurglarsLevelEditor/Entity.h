@@ -2,13 +2,14 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
+#include "TextureHandler.h"
 
 using namespace std;
 
 class Entity
 {
 public:
-	Entity(sf::Vector2i position);
+	Entity(sf::Vector2i position, sf::IntRect rect);
 	~Entity();
 	virtual void Update() = 0;
 	virtual void Render() = 0;
@@ -17,6 +18,7 @@ public:
 protected:
 	sf::Vector2i mPosition, mTexturePosition;
 	sf::Sprite mSprite;
+	sf::IntRect mHitBox;
 };
 
 #endif

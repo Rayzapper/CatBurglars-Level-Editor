@@ -1,7 +1,7 @@
 #include "Entity.h"
 
-Entity::Entity(sf::Vector2i position)
-: mPosition(position)
+Entity::Entity(sf::Vector2i position, sf::IntRect rect)
+: mPosition(position), mHitBox(rect)
 {
 
 }

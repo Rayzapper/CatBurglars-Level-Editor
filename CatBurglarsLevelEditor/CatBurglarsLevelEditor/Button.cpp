@@ -2,11 +2,14 @@
 
 static sf::Texture *texture;
 static sf::RenderWindow *window;
+static TextureHandler *textureHandler;
 
-Button::Button(sf::Vector2i position, int width, int height)
-: Entity(position), mHitBox(0, 0, width, height)
+Button::Button(sf::Vector2i position, int width, int height, int textureID, TextureHandler *textures)
+: Entity(position, sf::IntRect(position.x, position.y, width, height))
 {
-
+	textureHandler = textures;
+	texture = textureHandler->GetTexture(textureID);
+	mSprite.setTexture(*texture, true);
 }
 
 Button::~Button()
@@ -24,8 +27,7 @@ void Button::Render()
 
 }
 
-void Button::Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow)
+void Button::Initialize(sf::RenderWindow *mainWindow)
 {
 	window = mainWindow;
-	texture = tex;
 }
