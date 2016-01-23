@@ -8,10 +8,12 @@ typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 TileLayer tileLayerBottom, tileLayer2, tileLayer3;
 
-static UIElement *sidebar;
+static UIElement *sidebar, *selector, *sidebarSelection;
 
-static int selectedLayer = 0, currentMapSizeX, currentMapSizeY;
+static int selectedLayer = 0, selectedTileID = 2, currentMapSizeX, currentMapSizeY;
 static TextureHandler textures;
+
+static sf::Vector2i mousePosition;
 
 Editor::Editor()
 {
@@ -53,13 +55,21 @@ void Editor::Run()
 
 void Editor::Update()
 {
+	Tile::SelectedID(selectedTileID);
+	mousePosition = sf::Mouse::getPosition(*window);
 	if (!startMenu)
 	{
 		for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 		{
 			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 			{
-				tileLayerBottom[y][x]->Update();
+				tileLayerBottom[y][x]->Update(mousePosition);
+				if (tileLayerBottom[y][x]->GetMouseover())
+				{
+					sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
+					newSelectPos += tileLayerBottom[y][x]->GetSize() / 2;
+					selector->SetPosition(newSelectPos);
+				}
 			}
 		}
 	}
@@ -77,6 +87,7 @@ void Editor::Render()
 				tileLayerBottom[y][x]->Render();
 			}
 		}
+		selector->Render();
 		sidebar->Render();
 	}
 	window->display();
@@ -130,5 +141,6 @@ void Editor::StartMapSpawn()
 void Editor::UISpawn()
 {
 	sf::Vector2i sidebarPosition(100, screenHeight / 2);
+	selector = new UIElement(sf::Vector2i(200 + Tile::GetSize().x / 2, Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
 	sidebar = new UIElement(sidebarPosition, 200, 800, 1, &textures);
 }

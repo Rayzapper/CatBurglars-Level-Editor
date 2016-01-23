@@ -11,7 +11,7 @@ class Entity
 public:
 	Entity(sf::Vector2i position, sf::IntRect rect);
 	~Entity();
-	virtual void Update() = 0;
+	virtual void Update(sf::Vector2i mousePosition) = 0;
 	virtual void Render() = 0;
 	void SetPosition(sf::Vector2i newPosition);
 	sf::Vector2i GetPosition();

@@ -1,9 +1,11 @@
 #include "Tile.h"
 
 static const int width = 50, height = 50;
+static int selectedID = 0;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
+bool mouse = false;
 
 Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures)
 : Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID)
@@ -11,6 +13,7 @@ Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *texture
 	textureHandler = textures;
 	texture = textureHandler->GetTexture(textureID);
 	mSprite.setTexture(*texture, true);
+	mSprite.setTextureRect(sf::IntRect((ID % 3) * width, floor(ID / 3), width, height));
 }
 
 Tile::~Tile()
@@ -18,9 +21,17 @@ Tile::~Tile()
 
 }
 
-void Tile::Update()
+void Tile::Update(sf::Vector2i mousePosition)
 {
-	
+	mouse = mHitBox.contains(mousePosition);
+	if (mouse)
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		{
+			mTileID = selectedID;
+			mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3), width, height));
+		}
+	}
 }
 
 void Tile::Render()
@@ -36,9 +47,16 @@ void Tile::Initialize(sf::RenderWindow *mainWindow)
 
 sf::Vector2i Tile::GetSize(){ return sf::Vector2i(width, height); }
 
+void Tile::SelectedID(int ID)
+{
+	selectedID = ID;
+}
+
 void Tile::SetID(int ID)
 {
 	mTileID = ID;
 }
 
 int Tile::GetID(){ return mTileID; }
+
+bool Tile::GetMouseover(){ return mouse; }

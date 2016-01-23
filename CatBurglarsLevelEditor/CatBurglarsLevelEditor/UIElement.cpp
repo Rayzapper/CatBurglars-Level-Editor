@@ -18,7 +18,7 @@ UIElement::~UIElement()
 
 }
 
-void UIElement::Update()
+void UIElement::Update(sf::Vector2i mousePosition)
 {
 
 }

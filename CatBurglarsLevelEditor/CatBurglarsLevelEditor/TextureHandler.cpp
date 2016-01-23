@@ -14,7 +14,7 @@ void TextureHandler::Initialize()
 {
 	mTileTexture.loadFromFile("Resources/TestTile.png");
 	mSidebarTexture.loadFromFile("Resources/SideBar.png");
-	mSelectorTexture.loadFromFile("Resources/SelectorBar.png");
+	mSelectorTexture.loadFromFile("Resources/Selector.png");
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)

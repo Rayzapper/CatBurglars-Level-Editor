@@ -17,7 +17,7 @@ Button::~Button()
 
 }
 
-void Button::Update()
+void Button::Update(sf::Vector2i mousePosition)
 {
 
 }
