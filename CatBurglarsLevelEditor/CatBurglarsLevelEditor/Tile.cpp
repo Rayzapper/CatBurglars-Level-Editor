@@ -5,14 +5,19 @@ static sf::Texture *texture;
 static sf::RenderWindow *window;
 
 Tile::Tile(sf::Vector2i position, int ID)
-: Entity(position), mHitBox(0, 0, width, height), mTileID(ID)
+: Entity(position), mHitBox(position.x, position.y, width, height), mTileID(ID)
 {
-	
+	mSprite.setTexture(*texture, true);
 }
 
 Tile::~Tile()
 {
 
+}
+
+void Tile::Update()
+{
+	
 }
 
 void Tile::Render()

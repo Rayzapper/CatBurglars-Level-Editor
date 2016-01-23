@@ -8,6 +8,7 @@ class Tile : public Entity
 public:
 	Tile(sf::Vector2i position, int ID);
 	~Tile();
+	void Update();
 	void Render();
 	static void Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow);
 	static sf::Vector2i GetSize();

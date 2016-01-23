@@ -10,6 +10,7 @@ class Entity
 public:
 	Entity(sf::Vector2i position);
 	~Entity();
+	virtual void Update() = 0;
 	virtual void Render() = 0;
 	void SetPosition(sf::Vector2i newPosition);
 	sf::Vector2i GetPosition();

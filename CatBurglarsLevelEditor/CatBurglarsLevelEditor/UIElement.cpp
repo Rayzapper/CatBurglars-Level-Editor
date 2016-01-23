@@ -15,6 +15,11 @@ UIElement::~UIElement()
 
 }
 
+void UIElement::Update()
+{
+
+}
+
 void UIElement::Render()
 {
 	mSprite.setPosition(mPosition.x, mPosition.y);

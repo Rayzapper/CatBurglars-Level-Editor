@@ -14,6 +14,11 @@ Button::~Button()
 
 }
 
+void Button::Update()
+{
+
+}
+
 void Button::Render()
 {
 
