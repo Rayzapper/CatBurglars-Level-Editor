@@ -2,8 +2,8 @@
 #define EDITOR_H
 
 #include <SFML/Graphics.hpp>
-#include "UIManager.h"
-#include "Map.h"
+#include "Button.h"
+#include "UIElement.h"
 #include "Tile.h"
 
 class Editor
@@ -16,6 +16,10 @@ private:
 	void Initialize();
 	void Update();
 	void Render();
+	typedef vector<Tile*> TileColumn;
+	typedef vector<TileColumn> TileLayer;
+	TileLayer mTileLayerBottom, mTileLayer2, mTileLayer3;
+	int mSelectedLayer = 0, mMapSizeX, mMapSizeY;
 };
 
 #endif

@@ -70,20 +70,16 @@
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="UIButton.cpp" />
-    <ClCompile Include="UIManager.cpp" />
-    <ClCompile Include="UIObject.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="UIButton.h" />
-    <ClInclude Include="UIManager.h" />
-    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
