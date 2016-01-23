@@ -1,6 +1,6 @@
 #include "Button.h"
 
-static sf::Texture texture;
+static sf::Texture *texture;
 
 Button::Button()
 {
@@ -17,10 +17,7 @@ void Button::Render(sf::RenderWindow *window)
 
 }
 
-void Button::Initialize()
+void Button::Initialize(sf::Texture *tex)
 {
-	if (!texture.loadFromFile("Resources/StartUI.png"))
-	{
-		//Error Code
-	}
+	texture = tex;
 }

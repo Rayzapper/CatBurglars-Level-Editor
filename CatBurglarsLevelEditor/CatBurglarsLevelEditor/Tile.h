@@ -9,7 +9,7 @@ public:
 	Tile();
 	~Tile();
 	void Render(sf::RenderWindow *window);
-	static void Initialize();
+	static void Initialize(sf::Texture *tex);
 	sf::Vector2i GetSize();
 	void SetID(int ID);
 	int GetID();

@@ -1,6 +1,6 @@
 #include "UIElement.h"
 
-static sf::Texture texture;
+static sf::Texture *texture;
 
 UIElement::UIElement()
 {
@@ -18,10 +18,7 @@ void UIElement::Render(sf::RenderWindow *window)
 	window->draw(mSprite);
 }
 
-void UIElement::Initialize()
+void UIElement::Initialize(sf::Texture *tex)
 {
-	if (!texture.loadFromFile("Resources/StartUI.png"))
-	{
-		//Error Code
-	}
+	texture = tex;
 }

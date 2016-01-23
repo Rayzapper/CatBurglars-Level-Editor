@@ -1,30 +1,31 @@
 #include "Editor.h"
 
 sf::RenderWindow *window;
-Map *map;
-UIManager *ui;
 static bool startMenu;
+sf::Texture startUITexture, tileTexture;
 
 Editor::Editor()
 {
+	startUITexture.loadFromFile("Resources/StartUI.png");
+	tileTexture.loadFromFile("Resources/TestTile.png");
 	Initialize();
 }
 
 Editor::~Editor()
 {
-	delete ui;
+	
 }
 
 void Editor::Initialize()
 {
-	UIManager::Initialize();
-	Tile::Initialize();
+	UIElement::Initialize(&startUITexture);
+	Button::Initialize(&startUITexture);
+	Tile::Initialize(&tileTexture);
 }
 
 void Editor::Run()
 {
-	window = new sf::RenderWindow(sf::VideoMode(800, 800), "Cat Burglars Level Editor");
-	ui = new UIManager();
+	window = new sf::RenderWindow(sf::VideoMode(800, 800), "CatBurglars Level Editor");
 
 	while (window->isOpen())
 	{

@@ -19,7 +19,7 @@ private:
 	typedef vector<Tile*> TileColumn;
 	typedef vector<TileColumn> TileLayer;
 	TileLayer mTileLayerBottom, mTileLayer2, mTileLayer3;
-	int mSelectedLayer = 0, mMapSizeX, mMapSizeY;
+	int mSelectedLayer = 0, mCurrentMapSizeX, mCurrentMapSizeY;
 };
 
 #endif

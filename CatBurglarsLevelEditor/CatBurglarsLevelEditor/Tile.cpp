@@ -1,7 +1,7 @@
 #include "Tile.h"
 
 static const int width = 50, height = 50;
-static sf::Texture texture;
+static sf::Texture *texture;
 
 Tile::Tile()
 {
@@ -19,12 +19,9 @@ void Tile::Render(sf::RenderWindow *window)
 	window->draw(mSprite);
 }
 
-void Tile::Initialize()
+void Tile::Initialize(sf::Texture *tex)
 {
-	if (!texture.loadFromFile("Resources/TestTile.png"))
-	{
-		//Error code
-	}
+	texture = tex;
 }
 
 sf::Vector2i Tile::GetSize(){ return sf::Vector2i(width, height); }

@@ -1,32 +1,27 @@
-﻿Build started 2016-01-22 23:22:22.
+﻿Build started 2016-01-23 10:54:30.
      1>Project "C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\CatBurglarsLevelEditor\CatBurglarsLevelEditor.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"\\hsnas6\StudentHome\2014\a14rasli\Documents\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\include" /I"C:\Users\Rasmus\Downloads\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Editor.cpp Entity.cpp Main.cpp Map.cpp Tile.cpp UIButton.cpp UIManager.cpp UIObject.cpp
-         UIObject.cpp
-     1>c:\users\rasmus\documents\visual studio 2013\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\uiobject.cpp(17): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-         UIManager.cpp
-         UIButton.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"\\hsnas6\StudentHome\2014\a14rasli\Documents\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\include" /I"C:\Users\Rasmus\Downloads\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Editor.cpp Main.cpp Tile.cpp Button.cpp UIElement.cpp
+         UIElement.cpp
+     1>c:\users\rasmus\documents\visual studio 2013\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\uielement.cpp(17): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         Button.cpp
          Tile.cpp
      1>c:\users\rasmus\documents\visual studio 2013\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(18): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
          Editor.cpp
          Generating Code...
          Compiling...
-         Map.cpp
          Main.cpp
-         Entity.cpp
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe" /INCREMENTAL /NOLOGO /LIBPATH:"\\hsnas6\StudentHome\2014\a14rasli\Documents\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\lib" /LIBPATH:"C:\Users\Rasmus\Downloads\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\lib" "sfml-system-d.lib" "sfml-window-d.lib" "sfml-graphics-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.lib" /MACHINE:X86 Debug\Editor.obj
          Debug\Entity.obj
          Debug\Main.obj
-         Debug\Map.obj
          Debug\Tile.obj
-         Debug\UIButton.obj
-         Debug\UIManager.obj
-         Debug\UIObject.obj
+         Debug\Button.obj
+         Debug\UIElement.obj
          CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe
      1>Done Building Project "C:\Users\Rasmus\Documents\Visual Studio 2013\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\CatBurglarsLevelEditor\CatBurglarsLevelEditor.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.52
+Time Elapsed 00:00:05.04

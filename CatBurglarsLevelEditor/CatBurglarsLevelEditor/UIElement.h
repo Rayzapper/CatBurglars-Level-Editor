@@ -9,7 +9,7 @@ public:
 	UIElement();
 	~UIElement();
 	void Render(sf::RenderWindow *window);
-	static void Initialize();
+	static void Initialize(sf::Texture *tex);
 };
 
 #endif
