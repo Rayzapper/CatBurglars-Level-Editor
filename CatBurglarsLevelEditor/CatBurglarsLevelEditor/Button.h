@@ -6,10 +6,10 @@
 class Button : public Entity
 {
 public:
-	Button();
+	Button(sf::Vector2i position, int width, int height);
 	~Button();
-	void Render(sf::RenderWindow *window);
-	static void Initialize(sf::Texture *tex);
+	void Render();
+	static void Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow);
 private:
 	sf::IntRect mHitBox;
 };

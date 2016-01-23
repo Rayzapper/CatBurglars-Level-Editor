@@ -16,10 +16,7 @@ private:
 	void Initialize();
 	void Update();
 	void Render();
-	typedef vector<Tile*> TileColumn;
-	typedef vector<TileColumn> TileLayer;
-	TileLayer mTileLayerBottom, mTileLayer2, mTileLayer3;
-	int mSelectedLayer = 0, mCurrentMapSizeX, mCurrentMapSizeY;
+	void StartSpawn();
 };
 
 #endif

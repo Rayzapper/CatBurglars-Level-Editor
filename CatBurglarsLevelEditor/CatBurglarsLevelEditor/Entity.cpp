@@ -1,6 +1,7 @@
 #include "Entity.h"
 
-Entity::Entity()
+Entity::Entity(sf::Vector2i position)
+: mPosition(position)
 {
 
 }

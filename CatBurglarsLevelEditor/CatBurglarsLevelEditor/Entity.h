@@ -8,11 +8,11 @@ using namespace std;
 class Entity
 {
 public:
-	Entity();
+	Entity(sf::Vector2i position);
 	~Entity();
-	virtual void Render(sf::RenderWindow *window) = 0;
+	virtual void Render() = 0;
 protected:
-	sf::Vector2i mPosition;
+	sf::Vector2i mPosition, mTexturePosition;
 	sf::Sprite mSprite;
 };
 
