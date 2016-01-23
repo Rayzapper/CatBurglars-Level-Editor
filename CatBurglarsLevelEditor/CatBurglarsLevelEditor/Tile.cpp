@@ -4,8 +4,8 @@ static const int width = 50, height = 50;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
 
-Tile::Tile(sf::Vector2i position)
-: Entity(position), mHitBox(0, 0, width, height)
+Tile::Tile(sf::Vector2i position, int ID)
+: Entity(position), mHitBox(0, 0, width, height), mTileID(ID)
 {
 	
 }

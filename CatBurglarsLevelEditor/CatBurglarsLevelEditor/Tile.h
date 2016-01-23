@@ -6,11 +6,11 @@
 class Tile : public Entity
 {
 public:
-	Tile(sf::Vector2i position);
+	Tile(sf::Vector2i position, int ID);
 	~Tile();
 	void Render();
 	static void Initialize(sf::Texture *tex, sf::RenderWindow *mainWindow);
-	sf::Vector2i GetSize();
+	static sf::Vector2i GetSize();
 	void SetID(int ID);
 	int GetID();
 private:

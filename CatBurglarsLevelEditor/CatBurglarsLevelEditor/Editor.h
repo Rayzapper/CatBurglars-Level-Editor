@@ -18,6 +18,7 @@ private:
 	void Update();
 	void Render();
 	void StartConfiguration();
+	void StartMapSpawn();
 };
 
 #endif
