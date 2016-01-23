@@ -1,6 +1,7 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include "UIElement.h"
@@ -16,7 +17,7 @@ private:
 	void Initialize();
 	void Update();
 	void Render();
-	void StartSpawn();
+	void StartConfiguration();
 };
 
 #endif

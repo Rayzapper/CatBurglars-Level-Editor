@@ -6,7 +6,8 @@ static sf::RenderWindow *window;
 UIElement::UIElement(sf::Vector2i position)
 : Entity(position)
 {
-
+	mSprite.setTexture(*texture, true);
+	mSprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
 }
 
 UIElement::~UIElement()

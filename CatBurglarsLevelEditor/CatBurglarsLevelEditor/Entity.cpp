@@ -10,3 +10,10 @@ Entity::~Entity()
 {
 
 }
+
+void Entity::SetPosition(sf::Vector2i newPosition)
+{
+	mPosition = newPosition;
+}
+
+sf::Vector2i Entity::GetPosition(){ return mPosition; }

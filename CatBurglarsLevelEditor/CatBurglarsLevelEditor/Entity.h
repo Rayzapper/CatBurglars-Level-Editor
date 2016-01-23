@@ -11,6 +11,8 @@ public:
 	Entity(sf::Vector2i position);
 	~Entity();
 	virtual void Render() = 0;
+	void SetPosition(sf::Vector2i newPosition);
+	sf::Vector2i GetPosition();
 protected:
 	sf::Vector2i mPosition, mTexturePosition;
 	sf::Sprite mSprite;
