@@ -2,10 +2,10 @@
 
 static const int width = 50, height = 50;
 static int selectedID = 0;
+static bool changeAllowed = true;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
-bool mouse = false;
 
 Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures)
 : Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID)
@@ -23,13 +23,13 @@ Tile::~Tile()
 
 void Tile::Update(sf::Vector2i mousePosition)
 {
-	mouse = mHitBox.contains(mousePosition);
-	if (mouse)
+	mMouse = mHitBox.contains(mousePosition);
+	if (mMouse && changeAllowed)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
 			mTileID = selectedID;
-			mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3), width, height));
+			mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
 		}
 	}
 }
@@ -47,9 +47,10 @@ void Tile::Initialize(sf::RenderWindow *mainWindow)
 
 sf::Vector2i Tile::GetSize(){ return sf::Vector2i(width, height); }
 
-void Tile::SelectedID(int ID)
+void Tile::IDChangeInfo(int ID, bool allowed)
 {
 	selectedID = ID;
+	changeAllowed = !allowed;
 }
 
 void Tile::SetID(int ID)
@@ -59,4 +60,4 @@ void Tile::SetID(int ID)
 
 int Tile::GetID(){ return mTileID; }
 
-bool Tile::GetMouseover(){ return mouse; }
+bool Tile::GetMouseover(){ return mMouse; }

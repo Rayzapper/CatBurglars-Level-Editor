@@ -6,11 +6,14 @@
 class Button : public Entity
 {
 public:
-	Button(sf::Vector2i position, int width, int height, int textureID, TextureHandler *textures);
+	Button(sf::Vector2i position, int width, int height, int textureID);
 	~Button();
 	void Update(sf::Vector2i mousePosition);
 	void Render();
-	static void Initialize(sf::RenderWindow *mainWindow);
+	bool GetMouseover();
+	bool GetPressed();
+private:
+	bool mPressed = false;
 };
 
 #endif

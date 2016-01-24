@@ -1,15 +1,9 @@
 #include "Button.h"
 
-static sf::Texture *texture;
-static sf::RenderWindow *window;
-static TextureHandler *textureHandler;
-
-Button::Button(sf::Vector2i position, int width, int height, int textureID, TextureHandler *textures)
+Button::Button(sf::Vector2i position, int width, int height, int textureID)
 : Entity(position, sf::IntRect(position.x, position.y, width, height))
 {
-	textureHandler = textures;
-	texture = textureHandler->GetTexture(textureID);
-	mSprite.setTexture(*texture, true);
+	
 }
 
 Button::~Button()
@@ -19,15 +13,20 @@ Button::~Button()
 
 void Button::Update(sf::Vector2i mousePosition)
 {
-
+	mMouse = mHitBox.contains(mousePosition);
+	if (mMouse)
+	{
+		mPressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+	}
+	else
+		mPressed = false;
 }
 
 void Button::Render()
 {
-
+	
 }
 
-void Button::Initialize(sf::RenderWindow *mainWindow)
-{
-	window = mainWindow;
-}
+bool Button::GetMouseover(){ return mMouse; }
+
+bool Button::GetPressed(){ return mPressed; }

@@ -12,7 +12,7 @@ public:
 	void Render();
 	static void Initialize(sf::RenderWindow *mainWindow);
 	static sf::Vector2i GetSize();
-	static void SelectedID(int ID);
+	static void IDChangeInfo(int ID, bool allowed);
 	void SetID(int ID);
 	int GetID();
 	bool GetMouseover();

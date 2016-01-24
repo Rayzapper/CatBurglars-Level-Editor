@@ -4,8 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <SFML/Graphics.hpp>
-#include "Button.h"
 #include "UIElement.h"
+#include "Button.h"
 #include "Tile.h"
 #include "TextureHandler.h"
 
