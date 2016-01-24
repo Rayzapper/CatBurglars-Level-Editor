@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <iostream>
+#include <fstream>
 #include <SFML/Graphics.hpp>
 #include "Button.h"
 #include "UIElement.h"

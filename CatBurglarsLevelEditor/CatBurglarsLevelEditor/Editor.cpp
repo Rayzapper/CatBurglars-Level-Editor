@@ -18,6 +18,7 @@ static sf::Vector2i mousePosition;
 Editor::Editor()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "CatBurglars Level Editor");
+	window->setVerticalSyncEnabled(true);
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
