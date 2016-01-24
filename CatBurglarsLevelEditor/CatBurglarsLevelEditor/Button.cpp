@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(sf::Vector2i position, int width, int height, int textureID)
+Button::Button(sf::Vector2i position, int width, int height)
 : Entity(position, sf::IntRect(position.x, position.y, width, height))
 {
 	

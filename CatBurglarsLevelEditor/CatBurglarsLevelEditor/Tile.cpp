@@ -13,7 +13,7 @@ Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *texture
 	textureHandler = textures;
 	texture = textureHandler->GetTexture(textureID);
 	mSprite.setTexture(*texture, true);
-	mSprite.setTextureRect(sf::IntRect((ID % 3) * width, floor(ID / 3), width, height));
+	mSprite.setTextureRect(sf::IntRect((ID % 3) * width, floor(ID / 3) * height, width, height));
 }
 
 Tile::~Tile()

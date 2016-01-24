@@ -20,8 +20,9 @@ private:
 	void Update();
 	void Render();
 	void StartConfiguration();
-	void StartMapSpawn();
+	void StartMapSpawn(string name);
 	void UISpawn();
+	void SaveMap();
 };
 
 #endif

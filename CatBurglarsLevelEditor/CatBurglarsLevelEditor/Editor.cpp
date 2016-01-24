@@ -3,13 +3,15 @@
 static sf::RenderWindow *window;
 static sf::View *view;
 static const int screenWidth = 1000, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4;
-static bool load;
+static bool load, focus;
+static string mapName;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 TileLayer tileLayerBottom, tileLayer2, tileLayer3;
 
-static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles;
+static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *saveUI;
+static Button *saveButton;
 static vector<vector<Button*>> sidebarTileButtons;
 
 static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY;
@@ -27,7 +29,7 @@ Editor::Editor()
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
-	StartMapSpawn();
+	StartMapSpawn(mapName);
 }
 
 Editor::~Editor()
@@ -51,9 +53,16 @@ void Editor::Run()
 		{
 			if (event.type == sf::Event::Closed)
 				window->close();
+			if (event.type == sf::Event::GainedFocus)
+				focus = true;
+			if (event.type == sf::Event::LostFocus)
+				focus = false;
 		}
-		Update();
-		Render();
+		if (focus)
+		{
+			Update();
+			Render();
+		}
 	}
 }
 
@@ -61,7 +70,7 @@ void Editor::Update()
 {
 	sf::Vector2f viewCenter = view->getCenter();
 	sf::Vector2f viewChange = viewCenter;
-	if (currentMapSizeX > screenWidth / Tile::GetSize().x)
+	if (currentMapSizeX > (screenWidth - 200) / Tile::GetSize().x)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
@@ -135,6 +144,14 @@ void Editor::Update()
 			}
 		}
 	}
+	saveUI->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	saveUI->Update(mousePosition);
+	saveButton->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	saveButton->Update(mousePosition);
+	if (saveButton->GetPressed())
+	{
+		SaveMap();
+	}
 }
 
 void Editor::Render()
@@ -149,6 +166,7 @@ void Editor::Render()
 	}
 	selector->Render();
 	sidebar->Render();
+	saveUI->Render();
 	sidebarTiles->Render();
 	sidebarSelection->Render();
 	window->display();
@@ -157,13 +175,13 @@ void Editor::Render()
 void Editor::StartConfiguration()
 {
 	string input;
-	while (input != "New" && input != "Load")
+	while (input != "n" && input != "l")
 	{
-		cout << "Please type 'New' for a new map or 'Load' to load a map." << endl;
+		cout << "Please type 'n' for a new map or 'l' to load a map." << endl;
 		cin >> input;
 	}
-	if (input == "New") load = false;
-	if (input == "load") load = true;
+	if (input == "n") load = false;
+	if (input == "l") load = true;
 	if (!load)
 	{
 		cout << "Please enter map width." << endl;
@@ -173,12 +191,12 @@ void Editor::StartConfiguration()
 	}
 	else
 	{
-		cout << "Please enter the name of the map." << endl;
-		cin >> input;
+		cout << "Please enter the name of the map. (Case sensitive)" << endl;
+		cin >> mapName;
 	}
 }
 
-void Editor::StartMapSpawn()
+void Editor::StartMapSpawn(string name)
 {
 	if (!load)
 	{
@@ -195,7 +213,33 @@ void Editor::StartMapSpawn()
 	}
 	else
 	{
-
+		ifstream inputFile("Maps/" + name + ".txt");
+		string input;
+		inputFile >> input;
+		currentMapSizeX = stoi(input);
+		cout << "Map width: " << currentMapSizeX << endl;
+		inputFile >> input;
+		currentMapSizeY = stoi(input);
+		cout << "Map height: " << currentMapSizeY << endl;
+		cout << "Tiles:" << endl;
+		for (int y = 0; y < currentMapSizeY; y++)
+		{
+			TileRow row;
+			for (int x = 0; x < currentMapSizeX; x++)
+			{
+				inputFile >> input;
+				int ID = stoi(input);
+				if (ID < 10)
+					cout << " " << ID;
+				else
+					cout << ID;
+				cout << " ";
+				Tile *tile = new Tile(sf::Vector2i(200 + x * Tile::GetSize().x, y * Tile::GetSize().y), ID, 0, &textures);
+				row.push_back(tile);
+			}
+			tileLayerBottom.push_back(row);
+			cout << endl;
+		}
 	}
 }
 
@@ -213,9 +257,42 @@ void Editor::UISpawn()
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
 			sf::Vector2i position(baseX * x + 25, baseY * y + 25);
-			Button *button = new Button(position, Tile::GetSize().x, Tile::GetSize().y, 0);
+			Button *button = new Button(position, Tile::GetSize().x, Tile::GetSize().y);
 			row.push_back(button);
 		}
 		sidebarTileButtons.push_back(row);
+	}
+	saveUI = new UIElement(sf::Vector2i(100, 10), 100, 20, 3, &textures);
+	saveButton = new Button(sf::Vector2i(50, 0), 100, 20);
+}
+
+void Editor::SaveMap()
+{
+	string input;
+	while (input != "n" && input != "y")
+	{
+		cout << "Would you like to save your map? y or n" << endl;
+		cin >> input;
+	}
+	if (input == "y")
+	{
+		cout << "Please write the name of the map." << endl;
+		cin >> input;
+		ofstream outputFile("Maps/" + input + ".txt");
+		outputFile << currentMapSizeX << endl;
+		outputFile << currentMapSizeY << endl;
+		for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
+		{
+			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
+			{
+				int ID = tileLayerBottom[y][x]->GetID();
+				if (ID < 10)
+					outputFile << "0" << ID << " ";
+				else
+					outputFile << ID << " ";
+			}
+			outputFile << endl;
+		}
+		cout << "Done!" << endl;
 	}
 }
