@@ -11,8 +11,8 @@ UIElement::UIElement(sf::Vector2i position, int hitboxWidth, int hitboxHeight, i
 	texture = textureHandler->GetTexture(textureID);
 	mSprite.setTexture(*texture, true);
 	mSprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
-	mHitBox.left -= position.x;
-	mHitBox.top -= position.y;
+	mHitBox.left -= hitboxWidth / 2;
+	mHitBox.top -= hitboxHeight / 2;
 }
 
 UIElement::~UIElement()
@@ -22,6 +22,8 @@ UIElement::~UIElement()
 
 void UIElement::Update(sf::Vector2i mousePosition)
 {
+	mHitBox.left = mPosition.x - mHitBox.width / 2;
+	mHitBox.top = mPosition.y - mHitBox.height / 2;
 	mMouse = mHitBox.contains(mousePosition);
 }
 

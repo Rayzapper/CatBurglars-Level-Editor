@@ -1,8 +1,9 @@
 #include "Editor.h"
 
 static sf::RenderWindow *window;
+static sf::View *view;
 static const int screenWidth = 1000, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4;
-static bool startMenu = true, load;
+static bool load;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
@@ -16,15 +17,17 @@ static TextureHandler textures;
 
 static sf::Vector2i mousePosition;
 
+
 Editor::Editor()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "CatBurglars Level Editor");
+	view = new sf::View(sf::Vector2f(screenWidth / 2, screenHeight / 2), sf::Vector2f(screenWidth, screenHeight));
 	window->setVerticalSyncEnabled(true);
+	window->setView(*view);
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
 	StartMapSpawn();
-	startMenu = false;
 }
 
 Editor::~Editor()
@@ -56,36 +59,79 @@ void Editor::Run()
 
 void Editor::Update()
 {
-	mousePosition = sf::Mouse::getPosition(*window);
-	sidebar->Update(mousePosition);
-	Tile::IDChangeInfo(selectedTileID, sidebar->GetMouseover());
-	if (!startMenu)
+	sf::Vector2f viewCenter = view->getCenter();
+	sf::Vector2f viewChange = viewCenter;
+	if (currentMapSizeX > screenWidth / Tile::GetSize().x)
 	{
-		for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
+			viewCenter.x += 5;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			viewCenter.x -= 5;
+		}
+		if (viewCenter.x < screenWidth / 2)
+			viewCenter.x = screenWidth / 2;
+		if (viewCenter.x > (currentMapSizeX * Tile::GetSize().x) + 200 - screenWidth / 2)
+			viewCenter.x = (currentMapSizeX * Tile::GetSize().x) + 200 - screenWidth / 2;
+
+	}
+	if (currentMapSizeY > screenHeight / Tile::GetSize().y)
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			viewCenter.y += 5;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			viewCenter.y -= 5;
+		}
+		if (viewCenter.y < screenHeight / 2)
+			viewCenter.y = screenHeight / 2;
+		if (viewCenter.y >(currentMapSizeY * Tile::GetSize().y) - screenHeight / 2)
+			viewCenter.y = (currentMapSizeY * Tile::GetSize().y) - screenHeight / 2;
+	}
+	if (viewCenter != view->getCenter())
+		view->setCenter(viewCenter);
+	window->setView(*view);
+	viewChange -= viewCenter;
+
+	mousePosition = sf::Mouse::getPosition(*window);
+	mousePosition.x += viewCenter.x - (screenWidth / 2);
+	mousePosition.y += viewCenter.y - (screenHeight / 2);
+
+	sidebar->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	sidebar->Update(mousePosition);
+	sidebarTiles->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	sidebarSelection->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+
+	Tile::IDChangeInfo(selectedTileID, sidebar->GetMouseover());
+	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
+	{
+		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
+		{
+			tileLayerBottom[y][x]->Update(mousePosition);
+			if (tileLayerBottom[y][x]->GetMouseover())
 			{
-				tileLayerBottom[y][x]->Update(mousePosition);
-				if (tileLayerBottom[y][x]->GetMouseover())
-				{
-					sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
-					newSelectPos += Tile::GetSize() / 2;
-					selector->SetPosition(newSelectPos);
-				}
+				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
+				newSelectPos += Tile::GetSize() / 2;
+				selector->SetPosition(newSelectPos);
 			}
 		}
-		for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	}
+	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	{
+		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
-			for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
+			sidebarTileButtons[y][x]->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+			sidebarTileButtons[y][x]->Update(mousePosition);
+			if (sidebarTileButtons[y][x]->GetPressed())
 			{
-				sidebarTileButtons[y][x]->Update(mousePosition);
-				if (sidebarTileButtons[y][x]->GetPressed())
-				{
-					sf::Vector2i newSelectPos = sidebarTileButtons[y][x]->GetPosition();
-					newSelectPos += Tile::GetSize() / 2;
-					sidebarSelection->SetPosition(newSelectPos);
-					selectedTileID = sidebarTilesX * y + x;
-				}
+				sf::Vector2i newSelectPos = sidebarTileButtons[y][x]->GetPosition();
+				newSelectPos += Tile::GetSize() / 2;
+				sidebarSelection->SetPosition(newSelectPos);
+				selectedTileID = sidebarTilesX * y + x;
 			}
 		}
 	}
@@ -94,20 +140,17 @@ void Editor::Update()
 void Editor::Render()
 {
 	window->clear();
-	if (!startMenu)
+	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
-		for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
+		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 		{
-			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
-			{
-				tileLayerBottom[y][x]->Render();
-			}
+			tileLayerBottom[y][x]->Render();
 		}
-		selector->Render();
-		sidebar->Render();
-		sidebarTiles->Render();
-		sidebarSelection->Render();
 	}
+	selector->Render();
+	sidebar->Render();
+	sidebarTiles->Render();
+	sidebarSelection->Render();
 	window->display();
 }
 

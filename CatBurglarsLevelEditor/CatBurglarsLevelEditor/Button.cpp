@@ -13,6 +13,8 @@ Button::~Button()
 
 void Button::Update(sf::Vector2i mousePosition)
 {
+	mHitBox.left = mPosition.x;
+	mHitBox.top = mPosition.y;
 	mMouse = mHitBox.contains(mousePosition);
 	if (mMouse)
 	{

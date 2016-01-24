@@ -14,6 +14,7 @@ public:
 	virtual void Update(sf::Vector2i mousePosition) = 0;
 	virtual void Render() = 0;
 	void SetPosition(sf::Vector2i newPosition);
+	void ChangePosition(sf::Vector2i change);
 	sf::Vector2i GetPosition();
 protected:
 	sf::Vector2i mPosition, mTexturePosition;
