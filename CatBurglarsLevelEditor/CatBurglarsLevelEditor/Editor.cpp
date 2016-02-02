@@ -1,8 +1,8 @@
 #include "Editor.h"
 
 static sf::RenderWindow *window;
-static sf::View *view;
-static const int screenWidth = 1000, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4;
+static sf::View *mainView, *sidebarView;
+static const int screenWidth = 1050, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4;
 static bool load, focus;
 static string mapName;
 
@@ -10,8 +10,9 @@ typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 TileLayer tileLayerBottom, tileLayer2, tileLayer3;
 
-static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *saveUI;
+static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *saveUI, *layerUI;
 static Button *saveButton;
+static vector<Button*> layerButtons;
 static vector<vector<Button*>> sidebarTileButtons;
 
 static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY;
@@ -23,9 +24,9 @@ static sf::Vector2i mousePosition;
 Editor::Editor()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "CatBurglars Level Editor");
-	view = new sf::View(sf::Vector2f(screenWidth / 2, screenHeight / 2), sf::Vector2f(screenWidth, screenHeight));
+	mainView = new sf::View(sf::Vector2f(screenWidth / 2, screenHeight / 2), sf::Vector2f(screenWidth, screenHeight));
 	window->setVerticalSyncEnabled(true);
-	window->setView(*view);
+	window->setView(*mainView);
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
@@ -68,7 +69,7 @@ void Editor::Run()
 
 void Editor::Update()
 {
-	sf::Vector2f viewCenter = view->getCenter();
+	sf::Vector2f viewCenter = mainView->getCenter();
 	sf::Vector2f viewChange = viewCenter;
 	if (currentMapSizeX > (screenWidth - 200) / Tile::GetSize().x)
 	{
@@ -101,9 +102,9 @@ void Editor::Update()
 		if (viewCenter.y >(currentMapSizeY * Tile::GetSize().y) - screenHeight / 2)
 			viewCenter.y = (currentMapSizeY * Tile::GetSize().y) - screenHeight / 2;
 	}
-	if (viewCenter != view->getCenter())
-		view->setCenter(viewCenter);
-	window->setView(*view);
+	if (viewCenter != mainView->getCenter())
+		mainView->setCenter(viewCenter);
+	window->setView(*mainView);
 	viewChange -= viewCenter;
 
 	mousePosition = sf::Mouse::getPosition(*window);
@@ -245,12 +246,12 @@ void Editor::StartMapSpawn(string name)
 
 void Editor::UISpawn()
 {
-	sf::Vector2i sidebarPosition(100, screenHeight / 2);
-	selector = new UIElement(sf::Vector2i(200 + Tile::GetSize().x / 2, Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
-	sidebar = new UIElement(sidebarPosition, 200, 800, 1, &textures);
+	sf::Vector2i sidebarPosition(125, screenHeight / 2);
+	selector = new UIElement(sf::Vector2i(250 + Tile::GetSize().x / 2, Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
+	sidebar = new UIElement(sidebarPosition, 250, 800, 1, &textures);
 	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, 25 + sidebarTilesY * 25), 0, 0, 0, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(25 + Tile::GetSize().x / 2, 25 + Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
-	int baseX = 50, baseY = 50;
+	int baseX = 64, baseY = 64;
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
 	{
 		vector<Button*> row;
@@ -262,8 +263,15 @@ void Editor::UISpawn()
 		}
 		sidebarTileButtons.push_back(row);
 	}
-	saveUI = new UIElement(sf::Vector2i(100, 10), 100, 20, 3, &textures);
-	saveButton = new Button(sf::Vector2i(50, 0), 100, 20);
+	saveUI = new UIElement(sf::Vector2i(75, 10), 100, 20, 3, &textures);
+	saveButton = new Button(sf::Vector2i(25, 0), 100, 20);
+	layerUI = new UIElement(sf::Vector2i(175, 10), 100, 20, 4, &textures);
+	for (vector<Button*>::size_type i = 0; i < 3; i++)
+	{
+		sf::Vector2i position(125 + 33 * i, 0);
+		Button *button = new Button(position, 33, 20);
+		layerButtons.push_back(button);
+	}
 }
 
 void Editor::SaveMap()
@@ -276,7 +284,7 @@ void Editor::SaveMap()
 	}
 	if (input == "y")
 	{
-		cout << "Please write the name of the map." << endl;
+		cout << "Please write the name of the map. (no spaces)" << endl;
 		cin >> input;
 		ofstream outputFile("Maps/" + input + ".txt");
 		outputFile << currentMapSizeX << endl;

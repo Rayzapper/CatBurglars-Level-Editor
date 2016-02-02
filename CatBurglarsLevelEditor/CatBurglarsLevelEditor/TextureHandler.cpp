@@ -16,6 +16,7 @@ void TextureHandler::Initialize()
 	mSidebarTexture.loadFromFile("Resources/SideBar.png");
 	mSelectorTexture.loadFromFile("Resources/Selector.png");
 	mSaveTexture.loadFromFile("Resources/Save.png");
+	mLayerTexture.loadFromFile("Resources/LayerButtons.png");
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -28,4 +29,6 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &mSelectorTexture;
 	if (ID == 3)
 		return &mSaveTexture;
+	if (ID == 4)
+		return &mLayerTexture;
 }

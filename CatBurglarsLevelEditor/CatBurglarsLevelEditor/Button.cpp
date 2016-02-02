@@ -8,7 +8,7 @@ Button::Button(sf::Vector2i position, int width, int height)
 
 Button::~Button()
 {
-
+	
 }
 
 void Button::Update(sf::Vector2i mousePosition)
