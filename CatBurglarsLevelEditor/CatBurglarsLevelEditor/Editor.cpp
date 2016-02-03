@@ -2,7 +2,7 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1050, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4, sidebarWidth = 256, tileSize = 64;
 static bool load, focus;
 static string mapName;
 
@@ -71,7 +71,7 @@ void Editor::Update()
 {
 	sf::Vector2f viewCenter = mainView->getCenter();
 	sf::Vector2f viewChange = viewCenter;
-	if (currentMapSizeX > (screenWidth - 200) / Tile::GetSize().x)
+	if (currentMapSizeX > (screenWidth - sidebarWidth) / tileSize)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
@@ -83,11 +83,11 @@ void Editor::Update()
 		}
 		if (viewCenter.x < screenWidth / 2)
 			viewCenter.x = screenWidth / 2;
-		if (viewCenter.x > (currentMapSizeX * Tile::GetSize().x) + 200 - screenWidth / 2)
-			viewCenter.x = (currentMapSizeX * Tile::GetSize().x) + 200 - screenWidth / 2;
+		if (viewCenter.x >(currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2)
+			viewCenter.x = (currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2;
 
 	}
-	if (currentMapSizeY > screenHeight / Tile::GetSize().y)
+	if (currentMapSizeY > screenHeight / tileSize)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
@@ -99,8 +99,8 @@ void Editor::Update()
 		}
 		if (viewCenter.y < screenHeight / 2)
 			viewCenter.y = screenHeight / 2;
-		if (viewCenter.y >(currentMapSizeY * Tile::GetSize().y) - screenHeight / 2)
-			viewCenter.y = (currentMapSizeY * Tile::GetSize().y) - screenHeight / 2;
+		if (viewCenter.y >(currentMapSizeY * tileSize) - screenHeight / 2)
+			viewCenter.y = (currentMapSizeY * tileSize) - screenHeight / 2;
 	}
 	if (viewCenter != mainView->getCenter())
 		mainView->setCenter(viewCenter);
@@ -147,11 +147,22 @@ void Editor::Update()
 	}
 	saveUI->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
 	saveUI->Update(mousePosition);
+	layerUI->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	layerUI->Update(mousePosition);
 	saveButton->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
 	saveButton->Update(mousePosition);
 	if (saveButton->GetPressed())
 	{
 		SaveMap();
+	}
+	for (vector<Button*>::size_type i = 0; i < layerButtons.size(); i++)
+	{
+		layerButtons[i]->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+		layerButtons[i]->Update(mousePosition);
+		if (layerButtons[i]->GetPressed())
+		{
+			cout << "Pressed layer button " << i << "!" << endl;
+		}
 	}
 }
 
@@ -166,8 +177,15 @@ void Editor::Render()
 		}
 	}
 	selector->Render();
-	sidebar->Render();
+
+	sf::RectangleShape sidebar;
+	sidebar.setFillColor(sf::Color::Blue);
+	sidebar.setSize(sf::Vector2f(sidebarWidth, screenHeight));
+	sidebar.setPosition(0, 0);
+	window->draw(sidebar);
+
 	saveUI->Render();
+	layerUI->Render();
 	sidebarTiles->Render();
 	sidebarSelection->Render();
 	window->display();
@@ -206,7 +224,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(200 + x * Tile::GetSize().x, y * Tile::GetSize().y), 0, 0, &textures);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -235,7 +253,7 @@ void Editor::StartMapSpawn(string name)
 				else
 					cout << ID;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(200 + x * Tile::GetSize().x, y * Tile::GetSize().y), ID, 0, &textures);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -246,29 +264,28 @@ void Editor::StartMapSpawn(string name)
 
 void Editor::UISpawn()
 {
-	sf::Vector2i sidebarPosition(125, screenHeight / 2);
-	selector = new UIElement(sf::Vector2i(250 + Tile::GetSize().x / 2, Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
-	sidebar = new UIElement(sidebarPosition, 250, 800, 1, &textures);
-	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, 25 + sidebarTilesY * 25), 0, 0, 0, &textures);
-	sidebarSelection = new UIElement(sf::Vector2i(25 + Tile::GetSize().x / 2, 25 + Tile::GetSize().y / 2), Tile::GetSize().x, Tile::GetSize().y, 2, &textures);
-	int baseX = 64, baseY = 64;
+	sf::Vector2i sidebarPosition(sidebarWidth / 2, screenHeight / 2);
+	selector = new UIElement(sf::Vector2i(sidebarWidth + tileSize / 2, tileSize / 2), tileSize, tileSize, 2, &textures);
+	sidebar = new UIElement(sidebarPosition, sidebarWidth, screenHeight, 0, &textures);
+	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
 	{
 		vector<Button*> row;
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
-			sf::Vector2i position(baseX * x + 25, baseY * y + 25);
-			Button *button = new Button(position, Tile::GetSize().x, Tile::GetSize().y);
+			sf::Vector2i position(tileSize * x + tileSize / 2, tileSize * y + tileSize / 2);
+			Button *button = new Button(position, tileSize, tileSize);
 			row.push_back(button);
 		}
 		sidebarTileButtons.push_back(row);
 	}
-	saveUI = new UIElement(sf::Vector2i(75, 10), 100, 20, 3, &textures);
-	saveButton = new Button(sf::Vector2i(25, 0), 100, 20);
-	layerUI = new UIElement(sf::Vector2i(175, 10), 100, 20, 4, &textures);
+	saveUI = new UIElement(sf::Vector2i(sidebarWidth / 2 - 50, 10), 100, 20, 3, &textures);
+	saveButton = new Button(sf::Vector2i(sidebarWidth / 2 - 100, 0), 100, 20);
+	layerUI = new UIElement(sf::Vector2i(sidebarWidth / 2 + 50, 10), 100, 20, 4, &textures);
 	for (vector<Button*>::size_type i = 0; i < 3; i++)
 	{
-		sf::Vector2i position(125 + 33 * i, 0);
+		sf::Vector2i position(sidebarWidth / 2 + 33 * i, 0);
 		Button *button = new Button(position, 33, 20);
 		layerButtons.push_back(button);
 	}

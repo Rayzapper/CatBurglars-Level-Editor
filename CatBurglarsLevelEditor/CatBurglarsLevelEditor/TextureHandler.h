@@ -9,7 +9,7 @@ public:
 	TextureHandler();
 	~TextureHandler();
 	void Initialize();
-	sf::Texture mTileTexture, mSidebarTexture, mSelectorTexture, mSaveTexture, mLayerTexture;
+	sf::Texture mTileTexture, mSelectorTexture, mSaveTexture, mLayerTexture;
 	sf::Texture* GetTexture(int ID);
 };
 

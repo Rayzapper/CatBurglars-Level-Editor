@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-static const int width = 50, height = 50;
+static const int width = 64, height = 64;
 static int selectedID = 0;
 static bool changeAllowed = true;
 static sf::Texture *texture;
