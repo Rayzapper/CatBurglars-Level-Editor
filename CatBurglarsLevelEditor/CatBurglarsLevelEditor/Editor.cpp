@@ -217,7 +217,6 @@ void Editor::Update()
 		layerButtons[i]->Update(sf::Mouse::getPosition(*window));
 		if (layerButtons[i]->GetPressed())
 		{
-			cout << "Pressed layer button " << i << "!" << endl;
 			selectedLayer = i;
 			selectedTileID = 0;
 			sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
