@@ -24,14 +24,22 @@ Tile::~Tile()
 void Tile::Update(sf::Vector2i mousePosition)
 {
 	mMouse = mHitBox.contains(mousePosition);
-	if (mMouse && changeAllowed)
+	if (mMouse)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
-			mTileID = selectedID;
-			mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
+			if (changeAllowed)
+			{
+				mTileID = selectedID;
+				mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
+			}
+			mClicked = true;
 		}
+		else
+			mClicked = false;
 	}
+	else
+		mClicked = false;
 }
 
 void Tile::Render()
@@ -47,10 +55,12 @@ void Tile::Initialize(sf::RenderWindow *mainWindow)
 
 sf::Vector2i Tile::GetSize(){ return sf::Vector2i(width, height); }
 
-void Tile::IDChangeInfo(int ID, bool allowed)
+void Tile::IDChangeInfo(int ID, bool allowed, int layer)
 {
 	selectedID = ID;
 	changeAllowed = !allowed;
+	if (layer != 0)
+		changeAllowed = false;
 }
 
 void Tile::SetID(int ID)
@@ -61,3 +71,5 @@ void Tile::SetID(int ID)
 int Tile::GetID(){ return mTileID; }
 
 bool Tile::GetMouseover(){ return mMouse; }
+
+bool Tile::GetClicked(){ return mClicked; }

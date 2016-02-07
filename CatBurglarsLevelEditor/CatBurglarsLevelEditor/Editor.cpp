@@ -2,15 +2,16 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4, sidebarWidth = 256, tileSize = 64;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 2;
 static bool load, focus;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
-TileLayer tileLayerBottom, tileLayer2, tileLayer3;
+TileLayer tileLayerBottom;
+vector<Object*> objectLayer1, objectLayer2;
 
-static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *saveUI, *layerUI;
+static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarObjects, *saveUI, *layerUI;
 static Button *saveButton;
 static vector<Button*> layerButtons;
 static vector<vector<Button*>> sidebarTileButtons;
@@ -20,6 +21,9 @@ static TextureHandler textures;
 
 static sf::Vector2i mousePosition;
 
+static float zoomLevel = 1.0;
+
+sf::Font font;
 
 Editor::Editor()
 {
@@ -43,8 +47,10 @@ Editor::~Editor()
 
 void Editor::Initialize()
 {
+	font.loadFromFile("Resources/calibri.ttf");
 	UIElement::Initialize(window);
 	Tile::Initialize(window);
+	Object::Initialize(window, &font);
 }
 
 void Editor::Run()
@@ -86,8 +92,8 @@ void Editor::Update()
 		}
 		if (viewCenter.x < screenWidth / 2 + sidebarWidth / 2)
 			viewCenter.x = screenWidth / 2 + sidebarWidth / 2;
-		if (viewCenter.x >(currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2)
-			viewCenter.x = (currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2;
+		if (viewCenter.x > (currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2 + sidebarWidth / 2)
+			viewCenter.x = (currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2 + sidebarWidth / 2;
 
 	}
 	if (currentMapSizeY > screenHeight / tileSize)
@@ -105,17 +111,32 @@ void Editor::Update()
 		if (viewCenter.y >(currentMapSizeY * tileSize) - screenHeight / 2)
 			viewCenter.y = (currentMapSizeY * tileSize) - screenHeight / 2;
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		zoomLevel -= 0.02;
+		if (zoomLevel < 1.0)
+			zoomLevel = 1.0;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		zoomLevel += 0.02;
+		if (zoomLevel > 5.0)
+			zoomLevel = 5.0;
+	}
+	mainView->setSize((float)screenWidth * zoomLevel - (float)sidebarWidth * zoomLevel, (float)screenHeight * zoomLevel);
 	if (viewCenter != mainView->getCenter())
 		mainView->setCenter(viewCenter);
 	viewChange -= viewCenter;
 
 	mousePosition = sf::Mouse::getPosition(*window);
+
 	mousePosition.x += viewCenter.x - screenWidth / 2 - sidebarWidth / 2;
 	mousePosition.y += viewCenter.y - screenHeight / 2;
 
 	sidebar->Update(sf::Mouse::getPosition(*window));
 
-	Tile::IDChangeInfo(selectedTileID, sidebar->GetMouseover());
+	bool mouseOverSidebar = sidebar->GetMouseover();
+	Tile::IDChangeInfo(selectedTileID, mouseOverSidebar, selectedLayer);
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
 		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
@@ -126,6 +147,47 @@ void Editor::Update()
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
+				if (selectedLayer != 0 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
+				{
+					vector<Object*>* layer;
+					if (selectedLayer == 1)
+						layer = &objectLayer1;
+					else
+						layer = &objectLayer2;
+					if (selectedLayer != 0)
+					{
+						for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
+						{
+							int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
+							if (xPos == x && yPos == y)
+							{
+								layer->erase(layer->begin() + i);
+								i--;
+							}
+						}
+						if (selectedTileID != 0)
+						{
+							Object *object;
+							if (selectedTileID == 1)
+							{
+								//Cat
+								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, &textures);
+							}
+							if (selectedTileID == 2)
+							{
+								//Button
+								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, &textures);
+								object->SetChannel(ChannelSet());
+							}
+							if (selectedTileID == 3)
+							{
+								//Crate
+								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 6, &textures);
+							}
+							layer->push_back(object);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -156,6 +218,28 @@ void Editor::Update()
 		if (layerButtons[i]->GetPressed())
 		{
 			cout << "Pressed layer button " << i << "!" << endl;
+			selectedLayer = i;
+			selectedTileID = 0;
+			sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
+			for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+			{
+				for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
+				{
+					bool state;
+					if (selectedLayer == 0)
+						state = true;
+					else
+					{
+						if (y == 0)
+							state = true;
+						else if (y == 1 && x == 0)
+							state = true;
+						else
+							state = false;
+					}
+					sidebarTileButtons[y][x]->SetActive(state);
+				}
+			}
 		}
 	}
 }
@@ -171,6 +255,14 @@ void Editor::Render()
 			tileLayerBottom[y][x]->Render();
 		}
 	}
+	for (vector<Object*>::size_type i = 0; i < objectLayer1.size(); i++)
+	{
+		objectLayer1[i]->Render();
+	}
+	for (vector<Object*>::size_type i = 0; i < objectLayer2.size(); i++)
+	{
+		objectLayer2[i]->Render();
+	}
 	selector->Render();
 
 	window->setView(*sidebarView);
@@ -183,7 +275,11 @@ void Editor::Render()
 
 	saveUI->Render();
 	layerUI->Render();
-	sidebarTiles->Render();
+
+	if (selectedLayer == 0)
+		sidebarTiles->Render();
+	else
+		sidebarObjects->Render();
 	sidebarSelection->Render();
 	window->display();
 }
@@ -256,6 +352,64 @@ void Editor::StartMapSpawn(string name)
 			tileLayerBottom.push_back(row);
 			cout << endl;
 		}
+		inputFile >> input;
+		int objNum = stoi(input);
+		for (int i = 0; i < objNum; i++)
+		{
+			Object *object;
+			int ID, xPos, yPos, channel, layer, textureID;
+			inputFile >> input;
+			ID = stoi(input);
+			inputFile >> input;
+			xPos = stoi(input);
+			inputFile >> input;
+			yPos = stoi(input);
+			inputFile >> input;
+			channel = stoi(input);
+			inputFile >> input;
+			layer = stoi(input);
+
+			if (ID == 0)
+				textureID = 1;
+			else if (ID == 1)
+				textureID = 5;
+			else if (ID == 2)
+				textureID = 6;
+
+			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, &textures);
+			object->SetChannel(channel);
+			objectLayer1.push_back(object);
+		}
+		inputFile >> input;
+		objNum = stoi(input);
+		for (int i = 0; i < objNum; i++)
+		{
+			Object *object;
+			int ID, xPos, yPos, channel, layer, textureID;
+			inputFile >> input;
+			ID = stoi(input);
+			inputFile >> input;
+			xPos = stoi(input);
+			inputFile >> input;
+			yPos = stoi(input);
+			inputFile >> input;
+			channel = stoi(input);
+			inputFile >> input;
+			layer = stoi(input);
+
+			if (ID == 0)
+				textureID = 1;
+			else if (ID == 1)
+				textureID = 5;
+			else if (ID == 2)
+				textureID = 6;
+
+			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, &textures);
+			object->SetChannel(channel);
+			objectLayer2.push_back(object);
+		}
 	}
 }
 
@@ -265,6 +419,7 @@ void Editor::UISpawn()
 	selector = new UIElement(sf::Vector2i(sidebarWidth + tileSize / 2, tileSize / 2), tileSize, tileSize, 2, &textures);
 	sidebar = new UIElement(sidebarPosition, sidebarWidth, screenHeight, 0, &textures);
 	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+	sidebarObjects = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2), 0, 0, 8, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
 	{
@@ -315,6 +470,37 @@ void Editor::SaveMap()
 			}
 			outputFile << endl;
 		}
+		outputFile << objectLayer1.size() << endl;
+		for (vector<Object*>::size_type i = 0; i < objectLayer1.size(); i++)
+		{
+			Object *object = objectLayer1[i];
+			outputFile << object->GetID() - 1 << endl;
+			outputFile << object->GetMapPosition().x << endl;
+			outputFile << object->GetMapPosition().y << endl;
+			outputFile << object->GetChannel() << endl;
+			outputFile << object->GetLayer() << endl;
+		}
+		outputFile << objectLayer2.size() << endl;
+		for (vector<Object*>::size_type i = 0; i < objectLayer2.size(); i++)
+		{
+			Object *object = objectLayer2[i];
+			outputFile << object->GetID() - 1 << endl;
+			outputFile << object->GetMapPosition().x << endl;
+			outputFile << object->GetMapPosition().y << endl;
+			outputFile << object->GetChannel() << endl;
+			outputFile << object->GetLayer() << endl;
+		}
 		cout << "Done!" << endl;
 	}
+}
+
+int Editor::ChannelSet()
+{
+	int channel = -1;
+	while (channel < 0)
+	{
+		cout << "Please enter the channel number you wish to use. (positive)" << endl;
+		cin >> channel;
+	}
+	return channel;
 }

@@ -8,6 +8,7 @@
 #include "Button.h"
 #include "Tile.h"
 #include "TextureHandler.h"
+#include "Object.h"
 
 class Editor
 {
@@ -23,6 +24,7 @@ private:
 	void StartMapSpawn(string name);
 	void UISpawn();
 	void SaveMap();
+	int ChannelSet();
 };
 
 #endif
