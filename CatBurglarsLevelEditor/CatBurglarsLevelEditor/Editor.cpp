@@ -24,9 +24,12 @@ static sf::Vector2i mousePosition;
 Editor::Editor()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "CatBurglars Level Editor");
-	mainView = new sf::View(sf::Vector2f(screenWidth / 2, screenHeight / 2), sf::Vector2f(screenWidth, screenHeight));
+	mainView = new sf::View(sf::Vector2f((screenWidth - sidebarWidth) / 2 + sidebarWidth, screenHeight / 2), sf::Vector2f(screenWidth - sidebarWidth, screenHeight));
+	float sidebarRatio = (float)sidebarWidth / (float)screenWidth;
+	mainView->setViewport(sf::FloatRect(sidebarRatio, 0.0, 1.0 - sidebarRatio, 1.0));
+	sidebarView = new sf::View(sf::Vector2f(sidebarWidth / 2, screenHeight / 2), sf::Vector2f(sidebarWidth, screenHeight));
+	sidebarView->setViewport(sf::FloatRect(0.0, 0.0, sidebarRatio, 1.0));
 	window->setVerticalSyncEnabled(true);
-	window->setView(*mainView);
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
@@ -81,8 +84,8 @@ void Editor::Update()
 		{
 			viewCenter.x -= 5;
 		}
-		if (viewCenter.x < screenWidth / 2)
-			viewCenter.x = screenWidth / 2;
+		if (viewCenter.x < screenWidth / 2 + sidebarWidth / 2)
+			viewCenter.x = screenWidth / 2 + sidebarWidth / 2;
 		if (viewCenter.x >(currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2)
 			viewCenter.x = (currentMapSizeX * tileSize) + sidebarWidth - screenWidth / 2;
 
@@ -104,17 +107,13 @@ void Editor::Update()
 	}
 	if (viewCenter != mainView->getCenter())
 		mainView->setCenter(viewCenter);
-	window->setView(*mainView);
 	viewChange -= viewCenter;
 
 	mousePosition = sf::Mouse::getPosition(*window);
-	mousePosition.x += viewCenter.x - (screenWidth / 2);
-	mousePosition.y += viewCenter.y - (screenHeight / 2);
+	mousePosition.x += viewCenter.x - screenWidth / 2 - sidebarWidth / 2;
+	mousePosition.y += viewCenter.y - screenHeight / 2;
 
-	sidebar->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-	sidebar->Update(mousePosition);
-	sidebarTiles->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-	sidebarSelection->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
+	sidebar->Update(sf::Mouse::getPosition(*window));
 
 	Tile::IDChangeInfo(selectedTileID, sidebar->GetMouseover());
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
@@ -134,8 +133,7 @@ void Editor::Update()
 	{
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
-			sidebarTileButtons[y][x]->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-			sidebarTileButtons[y][x]->Update(mousePosition);
+			sidebarTileButtons[y][x]->Update(sf::Mouse::getPosition(*window));
 			if (sidebarTileButtons[y][x]->GetPressed())
 			{
 				sf::Vector2i newSelectPos = sidebarTileButtons[y][x]->GetPosition();
@@ -145,20 +143,16 @@ void Editor::Update()
 			}
 		}
 	}
-	saveUI->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-	saveUI->Update(mousePosition);
-	layerUI->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-	layerUI->Update(mousePosition);
-	saveButton->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-	saveButton->Update(mousePosition);
+	saveUI->Update(sf::Mouse::getPosition(*window));
+	layerUI->Update(sf::Mouse::getPosition(*window));
+	saveButton->Update(sf::Mouse::getPosition(*window));
 	if (saveButton->GetPressed())
 	{
 		SaveMap();
 	}
 	for (vector<Button*>::size_type i = 0; i < layerButtons.size(); i++)
 	{
-		layerButtons[i]->ChangePosition(sf::Vector2i(viewChange.x, viewChange.y));
-		layerButtons[i]->Update(mousePosition);
+		layerButtons[i]->Update(sf::Mouse::getPosition(*window));
 		if (layerButtons[i]->GetPressed())
 		{
 			cout << "Pressed layer button " << i << "!" << endl;
@@ -169,6 +163,7 @@ void Editor::Update()
 void Editor::Render()
 {
 	window->clear();
+	window->setView(*mainView);
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
 		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
@@ -177,6 +172,8 @@ void Editor::Render()
 		}
 	}
 	selector->Render();
+
+	window->setView(*sidebarView);
 
 	sf::RectangleShape sidebar;
 	sidebar.setFillColor(sf::Color::Blue);
