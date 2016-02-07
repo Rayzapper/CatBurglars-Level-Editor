@@ -12,12 +12,14 @@ public:
 	void Render();
 	static void Initialize(sf::RenderWindow *mainWindow);
 	static sf::Vector2i GetSize();
-	static void IDChangeInfo(int ID, bool allowed);
+	static void IDChangeInfo(int ID, bool allowed, int layer);
 	void SetID(int ID);
 	int GetID();
 	bool GetMouseover();
+	bool GetClicked();
 private:
 	int mTileID = 0;
+	bool mClicked;
 };
 
 #endif

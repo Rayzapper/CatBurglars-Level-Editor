@@ -12,8 +12,9 @@ public:
 	void Render();
 	bool GetMouseover();
 	bool GetPressed();
+	void SetActive(bool state);
 private:
-	bool mPressed = false;
+	bool mPressed = false, mActive = true;
 };
 
 #endif

@@ -8,7 +8,7 @@ Button::Button(sf::Vector2i position, int width, int height)
 
 Button::~Button()
 {
-
+	
 }
 
 void Button::Update(sf::Vector2i mousePosition)
@@ -16,7 +16,7 @@ void Button::Update(sf::Vector2i mousePosition)
 	mHitBox.left = mPosition.x;
 	mHitBox.top = mPosition.y;
 	mMouse = mHitBox.contains(mousePosition);
-	if (mMouse)
+	if (mMouse && mActive)
 	{
 		mPressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 	}
@@ -32,3 +32,8 @@ void Button::Render()
 bool Button::GetMouseover(){ return mMouse; }
 
 bool Button::GetPressed(){ return mPressed; }
+
+void Button::SetActive(bool state)
+{
+	mActive = state;
+}
