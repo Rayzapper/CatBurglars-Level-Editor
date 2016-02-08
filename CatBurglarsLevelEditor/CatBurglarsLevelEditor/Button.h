@@ -13,6 +13,7 @@ public:
 	bool GetMouseover();
 	bool GetPressed();
 	void SetActive(bool state);
+	bool GetActive();
 private:
 	bool mPressed = false, mActive = true;
 };

@@ -2,13 +2,13 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 4, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 2;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 2;
 static bool load, focus;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
-TileLayer tileLayerBottom;
+TileLayer tileLayerBottom, tileLayerFront;
 vector<Object*> objectLayer1, objectLayer2;
 
 static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarObjects, *saveUI, *layerUI;
@@ -147,48 +147,65 @@ void Editor::Update()
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
-				if (selectedLayer != 0 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
+				if (selectedLayer > 1 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
 				{
 					vector<Object*>* layer;
-					if (selectedLayer == 1)
+
+					if (selectedLayer == 2)
 						layer = &objectLayer1;
 					else
 						layer = &objectLayer2;
-					if (selectedLayer != 0)
+
+					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
 					{
-						for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
+						int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
+						if (xPos == x && yPos == y)
 						{
-							int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
-							if (xPos == x && yPos == y)
-							{
-								layer->erase(layer->begin() + i);
-								i--;
-							}
+							layer->erase(layer->begin() + i);
+							i--;
 						}
-						if (selectedTileID != 0)
+					}
+
+					if (selectedTileID != 0)
+					{
+						Object *object;
+						if (selectedTileID == 1)
 						{
-							Object *object;
-							if (selectedTileID == 1)
-							{
-								//Cat
-								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, &textures);
-							}
-							if (selectedTileID == 2)
-							{
-								//Button
-								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, &textures);
-								object->SetChannel(ChannelSet());
-							}
-							if (selectedTileID == 3)
-							{
-								//Crate
-								object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 6, &textures);
-							}
-							layer->push_back(object);
+							//Cat
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, &textures);
 						}
+						if (selectedTileID == 2)
+						{
+							//Button
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, &textures);
+							object->SetChannel(ChannelSet());
+						}
+						if (selectedTileID == 3)
+						{
+							//Crate
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 6, &textures);
+						}
+						if (selectedTileID == 4)
+						{
+							//Door
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, &textures);
+						}
+						if (selectedTileID == 5)
+						{
+							//Guard
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 10, &textures);
+						}
+						layer->push_back(object);
 					}
 				}
 			}
+		}
+	}
+	for (TileLayer::size_type y = 0; y < tileLayerFront.size(); y++)
+	{
+		for (TileRow::size_type x = 0; x < tileLayerFront[y].size(); x++)
+		{
+			tileLayerFront[y][x]->Update(mousePosition);
 		}
 	}
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
@@ -226,15 +243,55 @@ void Editor::Update()
 				{
 					bool state;
 					if (selectedLayer == 0)
-						state = true;
-					else
 					{
 						if (y == 0)
-							state = true;
-						else if (y == 1 && x == 0)
+						{
+							if (x == 2)
+								state = false;
+							else
+								state = true;
+						}
+						else if (y > 3)
 							state = true;
 						else
 							state = false;
+					}
+					else if (selectedLayer == 1)
+					{
+						if (y == 0)
+						{
+							if (x == 0)
+								state = true;
+							else
+								state = false;
+						}
+						else if (y > 3)
+							state = false;
+						else
+							state = true;
+					}
+					else if (selectedLayer == 2)
+					{
+						if (y > 1)
+							state = false;
+						else if (y == 0)
+						{
+							if (x == 1)
+								state = false;
+							else
+								state = true;
+						}
+						else
+							state = false;
+					}
+					else
+					{
+						if (y > 1)
+							state = false;
+						else if (y == 0 && x == 2)
+							state = false;
+						else
+							state = true;
 					}
 					sidebarTileButtons[y][x]->SetActive(state);
 				}
@@ -254,6 +311,13 @@ void Editor::Render()
 			tileLayerBottom[y][x]->Render();
 		}
 	}
+	for (TileLayer::size_type y = 0; y < tileLayerFront.size(); y++)
+	{
+		for (TileRow::size_type x = 0; x < tileLayerFront[y].size(); x++)
+		{
+			tileLayerFront[y][x]->Render();
+		}
+	}
 	for (vector<Object*>::size_type i = 0; i < objectLayer1.size(); i++)
 	{
 		objectLayer1[i]->Render();
@@ -267,7 +331,14 @@ void Editor::Render()
 	window->setView(*sidebarView);
 
 	sf::RectangleShape sidebar;
-	sidebar.setFillColor(sf::Color::Blue);
+	if (selectedLayer == 0)
+		sidebar.setFillColor(sf::Color::Red);
+	else if (selectedLayer == 1)
+		sidebar.setFillColor(sf::Color::Yellow);
+	else if (selectedLayer == 2)
+		sidebar.setFillColor(sf::Color::Blue);
+	else
+		sidebar.setFillColor(sf::Color::Green);
 	sidebar.setSize(sf::Vector2f(sidebarWidth, screenHeight));
 	sidebar.setPosition(0, 0);
 	window->draw(sidebar);
@@ -275,11 +346,30 @@ void Editor::Render()
 	saveUI->Render();
 	layerUI->Render();
 
-	if (selectedLayer == 0)
+	if (selectedLayer < 2)
 		sidebarTiles->Render();
 	else
 		sidebarObjects->Render();
+
+	sf::Sprite inactiveSprite;
+	sf::Texture *texture;
+	texture = textures.GetTexture(7);
+	inactiveSprite.setTexture(*texture, true);
+	inactiveSprite.setColor(sf::Color::Black);
+	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	{
+		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
+		{
+			if (!sidebarTileButtons[y][x]->GetActive())
+			{
+				inactiveSprite.setPosition(tileSize / 2 + tileSize * x, tileSize / 2 + tileSize * y);
+				window->draw(inactiveSprite);
+			}
+		}
+	}
+
 	sidebarSelection->Render();
+
 	window->display();
 }
 
@@ -316,10 +406,20 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures, 0);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
+		}
+		for (int y = 0; y < currentMapSizeY; y++)
+		{
+			TileRow row;
+			for (int x = 0; x < currentMapSizeX; x++)
+			{
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures, 1);
+				row.push_back(tile);
+			}
+			tileLayerFront.push_back(row);
 		}
 	}
 	else
@@ -332,7 +432,7 @@ void Editor::StartMapSpawn(string name)
 		inputFile >> input;
 		currentMapSizeY = stoi(input);
 		cout << "Map height: " << currentMapSizeY << endl;
-		cout << "Tiles:" << endl;
+		cout << "Background Tiles:" << endl;
 		for (int y = 0; y < currentMapSizeY; y++)
 		{
 			TileRow row;
@@ -345,10 +445,28 @@ void Editor::StartMapSpawn(string name)
 				else
 					cout << ID;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures, 0);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
+			cout << endl;
+		}
+		for (int y = 0; y < currentMapSizeY; y++)
+		{
+			TileRow row;
+			for (int x = 0; x < currentMapSizeX; x++)
+			{
+				inputFile >> input;
+				int ID = stoi(input);
+				if (ID < 10)
+					cout << " " << ID;
+				else
+					cout << ID;
+				cout << " ";
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures, 1);
+				row.push_back(tile);
+			}
+			tileLayerFront.push_back(row);
 			cout << endl;
 		}
 		inputFile >> input;
@@ -427,6 +545,19 @@ void Editor::UISpawn()
 		{
 			sf::Vector2i position(tileSize * x + tileSize / 2, tileSize * y + tileSize / 2);
 			Button *button = new Button(position, tileSize, tileSize);
+			bool state;
+			if (y == 0)
+			{
+				if (x == 2)
+					state = false;
+				else
+					state = true;
+			}
+			else if (y > 3)
+				state = true;
+			else
+				state = false;
+			button->SetActive(state);
 			row.push_back(button);
 		}
 		sidebarTileButtons.push_back(row);
@@ -434,10 +565,10 @@ void Editor::UISpawn()
 	saveUI = new UIElement(sf::Vector2i(sidebarWidth / 2 - 50, 10), 100, 20, 3, &textures);
 	saveButton = new Button(sf::Vector2i(sidebarWidth / 2 - 100, 0), 100, 20);
 	layerUI = new UIElement(sf::Vector2i(sidebarWidth / 2 + 50, 10), 100, 20, 4, &textures);
-	for (vector<Button*>::size_type i = 0; i < 3; i++)
+	for (vector<Button*>::size_type i = 0; i < 4; i++)
 	{
-		sf::Vector2i position(sidebarWidth / 2 + 33 * i, 0);
-		Button *button = new Button(position, 33, 20);
+		sf::Vector2i position(sidebarWidth / 2 + 25 * i, 0);
+		Button *button = new Button(position, 25, 20);
 		layerButtons.push_back(button);
 	}
 }
@@ -462,6 +593,18 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 			{
 				int ID = tileLayerBottom[y][x]->GetID();
+				if (ID < 10)
+					outputFile << "0" << ID << " ";
+				else
+					outputFile << ID << " ";
+			}
+			outputFile << endl;
+		}
+		for (TileLayer::size_type y = 0; y < tileLayerFront.size(); y++)
+		{
+			for (TileRow::size_type x = 0; x < tileLayerFront[y].size(); x++)
+			{
+				int ID = tileLayerFront[y][x]->GetID();
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else

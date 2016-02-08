@@ -6,7 +6,7 @@
 class Tile : public Entity
 {
 public:
-	Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures);
+	Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures, int layer);
 	~Tile();
 	void Update(sf::Vector2i mousePosition);
 	void Render();
@@ -18,7 +18,7 @@ public:
 	bool GetMouseover();
 	bool GetClicked();
 private:
-	int mTileID = 0;
+	int mTileID = 0, mLayer;
 	bool mClicked;
 };
 

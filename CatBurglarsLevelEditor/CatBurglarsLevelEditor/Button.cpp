@@ -37,3 +37,5 @@ void Button::SetActive(bool state)
 {
 	mActive = state;
 }
+
+bool Button::GetActive(){ return mActive; }

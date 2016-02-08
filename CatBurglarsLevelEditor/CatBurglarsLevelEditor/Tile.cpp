@@ -1,14 +1,14 @@
 #include "Tile.h"
 
 static const int width = 64, height = 64;
-static int selectedID = 0;
+static int selectedID = 0, currentLayer = 0;
 static bool changeAllowed = true;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
 
-Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures)
-: Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID)
+Tile::Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures, int layer)
+: Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID), mLayer(layer)
 {
 	textureHandler = textures;
 	texture = textureHandler->GetTexture(textureID);
@@ -28,7 +28,7 @@ void Tile::Update(sf::Vector2i mousePosition)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
-			if (changeAllowed)
+			if (changeAllowed && mLayer == currentLayer)
 			{
 				mTileID = selectedID;
 				mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
@@ -59,8 +59,9 @@ void Tile::IDChangeInfo(int ID, bool allowed, int layer)
 {
 	selectedID = ID;
 	changeAllowed = !allowed;
-	if (layer != 0)
+	if (layer > 1)
 		changeAllowed = false;
+	currentLayer = layer;
 }
 
 void Tile::SetID(int ID)

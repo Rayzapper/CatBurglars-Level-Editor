@@ -1,6 +1,6 @@
 #include "TextureHandler.h"
 
-static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture;
+static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -22,19 +22,25 @@ void TextureHandler::Initialize()
 	buttonTexture.loadFromFile("Resources/Button.png");
 	crateTexture.loadFromFile("Resources/crate.png");
 	deleteTexture.loadFromFile("Resources/Delete.png");
+	doorTexture.loadFromFile("Resources/Door.png");
+	guardTexture.loadFromFile("Resources/Guard.png");
 
-	sf::Image deleteImage, catImage, buttonImage, crateImage;
+	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage;
 
 	deleteImage.loadFromFile("Resources/Delete.png");
 	catImage.loadFromFile("Resources/cat.png");
 	buttonImage.loadFromFile("Resources/Button.png");
 	crateImage.loadFromFile("Resources/crate.png");
+	doorImage.loadFromFile("Resources/Door.png");
+	guardImage.loadFromFile("Resources/Guard.png");
 
 	objectsTexture.create(192, 128);
 	objectsTexture.update(deleteImage, 0, 0);
 	objectsTexture.update(catImage, 64, 0);
 	objectsTexture.update(buttonImage, 128, 0);
 	objectsTexture.update(crateImage, 0, 64);
+	objectsTexture.update(doorImage, 64, 64);
+	objectsTexture.update(guardImage, 128, 64);
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -57,6 +63,10 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &deleteTexture;
 	else if (ID == 8)
 		return &objectsTexture;
+	else if (ID == 9)
+		return &doorTexture;
+	else if (ID == 10)
+		return &guardTexture;
 	else
 		return &deleteTexture;
 }
