@@ -129,9 +129,9 @@ void Editor::Update()
 	viewChange -= viewCenter;
 
 	mousePosition = sf::Mouse::getPosition(*window);
-
-	mousePosition.x += viewCenter.x - screenWidth / 2 - sidebarWidth / 2;
-	mousePosition.y += viewCenter.y - screenHeight / 2;
+	sf::Vector2f mouseWorldPosition = window->mapPixelToCoords(mousePosition, *mainView);
+	mousePosition.x = mouseWorldPosition.x;
+	mousePosition.y = mouseWorldPosition.y;
 
 	sidebar->Update(sf::Mouse::getPosition(*window));
 
@@ -189,6 +189,7 @@ void Editor::Update()
 						{
 							//Door
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, &textures);
+							object->SetChannel(ChannelSet());
 						}
 						if (selectedTileID == 5)
 						{
@@ -521,6 +522,10 @@ void Editor::StartMapSpawn(string name)
 				textureID = 5;
 			else if (ID == 2)
 				textureID = 6;
+			else if (ID == 3)
+				textureID = 9;
+			else if (ID == 4)
+				textureID = 10;
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
 			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, &textures);
@@ -639,9 +644,9 @@ void Editor::SaveMap()
 int Editor::ChannelSet()
 {
 	int channel = -1;
-	while (channel < 0)
+	while (channel < 0 || channel > 10)
 	{
-		cout << "Please enter the channel number you wish to use. (positive)" << endl;
+		cout << "Please enter the channel number you wish to use. (1 to 10)" << endl;
 		cin >> channel;
 	}
 	return channel;
