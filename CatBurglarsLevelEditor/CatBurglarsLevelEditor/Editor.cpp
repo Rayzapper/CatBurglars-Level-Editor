@@ -34,6 +34,7 @@ Editor::Editor()
 	sidebarView = new sf::View(sf::Vector2f(sidebarWidth / 2, screenHeight / 2), sf::Vector2f(sidebarWidth, screenHeight));
 	sidebarView->setViewport(sf::FloatRect(0.0, 0.0, sidebarRatio, 1.0));
 	window->setVerticalSyncEnabled(true);
+	window->setFramerateLimit(60);
 	textures.Initialize();
 	Initialize();
 	StartConfiguration();
@@ -72,6 +73,11 @@ void Editor::Run()
 		{
 			Update();
 			Render();
+		}
+		else
+		{
+			sf::Time time = sf::milliseconds(10);
+			sf::sleep(time);
 		}
 	}
 }
@@ -303,7 +309,8 @@ void Editor::Update()
 
 void Editor::Render()
 {
-	window->clear();
+	sf::Color windowColor(100, 100, 100, 255);
+	window->clear(windowColor);
 	window->setView(*mainView);
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
