@@ -2,7 +2,7 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 6, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 3;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 7, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 3;
 static bool load, focus;
 static string mapName;
 
@@ -394,6 +394,8 @@ void Editor::Update()
 							else
 							{
 								if (y < 6)
+									state = true;
+								else if (y == 6 && x == 0)
 									state = true;
 								else
 									state = false;
