@@ -237,6 +237,11 @@ void Editor::Update()
 							object->SetFacing(FacingSet());
 							object->SetRange(RangeSet(1));
 						}
+						if (selectedTileID == 10)
+						{
+							//MetalCrate
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 17, "null", "null", -1, &textures);
+						}
 						layer->push_back(object);
 					}
 				}
@@ -334,7 +339,7 @@ void Editor::Update()
 					{
 						if (y > 3)
 							state = false;
-						else if (y == 3 && x != 0)
+						else if (y == 3 && x == 2)
 							state = false;
 						else if (y == 2 && x == 0)
 							state = false;
@@ -694,6 +699,10 @@ int Editor::LoadObjectTextureID(int ID)
 		textureID = 14;
 	else if (ID == 7)
 		textureID = 15;
+	else if (ID == 8)
+		textureID = 16;
+	else if (ID == 9)
+		textureID = 17;
 	return textureID;
 }
 
