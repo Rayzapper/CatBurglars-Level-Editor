@@ -2,21 +2,22 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 2;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 6, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 3;
 static bool load, focus;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
-TileLayer tileLayerBottom, tileLayerFront;
-vector<Object*> objectLayer1, objectLayer2;
+static TileLayer tileLayerBottom, tileLayerFront;
+static vector<Object*> objectLayer1, objectLayer2;
 
-static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarObjects, *saveUI, *layerUI;
+static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarTiles2, *sidebarObjects, *saveUI, *layerUI, *pageUI;
 static Button *saveButton;
-static vector<Button*> layerButtons;
+static vector<Button*> layerButtons, pageButtons;
 static vector<vector<Button*>> sidebarTileButtons;
 
-static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY;
+static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, editorPage = 0;
+
 static TextureHandler textures;
 
 static sf::Vector2i mousePosition;
@@ -135,14 +136,15 @@ void Editor::Update()
 	viewChange -= viewCenter;
 
 	mousePosition = sf::Mouse::getPosition(*window);
+	sf::Vector2i mouseScreenPosition = mousePosition;
 	sf::Vector2f mouseWorldPosition = window->mapPixelToCoords(mousePosition, *mainView);
 	mousePosition.x = mouseWorldPosition.x;
 	mousePosition.y = mouseWorldPosition.y;
 
-	sidebar->Update(sf::Mouse::getPosition(*window));
+	sidebar->Update(mouseScreenPosition);
 
 	bool mouseOverSidebar = sidebar->GetMouseover();
-	Tile::IDChangeInfo(selectedTileID, mouseOverSidebar, selectedLayer);
+	Tile::IDChangeInfo(selectedTileID, mouseOverSidebar, selectedLayer, editorPage);
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
 		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
@@ -178,29 +180,52 @@ void Editor::Update()
 						if (selectedTileID == 1)
 						{
 							//Cat
-							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, &textures);
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, "null", "null", -1, &textures);
 						}
 						if (selectedTileID == 2)
 						{
 							//Button
-							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, &textures);
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, "null", "null", 0, &textures);
 							object->SetChannel(ChannelSet());
+							object->SetButtonHold(ButtonHoldSet());
 						}
 						if (selectedTileID == 3)
 						{
 							//Crate
-							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 6, &textures);
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 6, "null", "null", -1, &textures);
 						}
 						if (selectedTileID == 4)
 						{
-							//Door
-							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, &textures);
+							//Door NS
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet());
+							object->SetScript(ScriptSet());
 						}
 						if (selectedTileID == 5)
 						{
 							//Guard
-							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 10, &textures);
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 10, "null", "null", -1, &textures);
+							object->SetScript(ScriptSet());
+						}
+						if (selectedTileID == 6)
+						{
+							//Button2
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 13, "null", "null", 0, &textures);
+							object->SetChannel(ChannelSet());
+							object->SetButtonHold(ButtonHoldSet());
+						}
+						if (selectedTileID == 7)
+						{
+							//Camera
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 14, "null", "null", -1, &textures);
+							object->SetChannel(ChannelSet());
+							object->SetFacing(FacingSet());
+						}
+						if (selectedTileID == 8)
+						{
+							//Computer
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 15, "null", "null", -1, &textures);
+							object->SetChannel(ChannelSet());
 						}
 						layer->push_back(object);
 					}
@@ -219,7 +244,7 @@ void Editor::Update()
 	{
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
-			sidebarTileButtons[y][x]->Update(sf::Mouse::getPosition(*window));
+			sidebarTileButtons[y][x]->Update(mouseScreenPosition);
 			if (sidebarTileButtons[y][x]->GetPressed())
 			{
 				sf::Vector2i newSelectPos = sidebarTileButtons[y][x]->GetPosition();
@@ -229,20 +254,22 @@ void Editor::Update()
 			}
 		}
 	}
-	saveUI->Update(sf::Mouse::getPosition(*window));
-	layerUI->Update(sf::Mouse::getPosition(*window));
-	saveButton->Update(sf::Mouse::getPosition(*window));
+	saveUI->Update(mouseScreenPosition);
+	layerUI->Update(mouseScreenPosition);
+	pageUI->Update(mouseScreenPosition);
+	saveButton->Update(mouseScreenPosition);
 	if (saveButton->GetPressed())
 	{
 		SaveMap();
 	}
 	for (vector<Button*>::size_type i = 0; i < layerButtons.size(); i++)
 	{
-		layerButtons[i]->Update(sf::Mouse::getPosition(*window));
+		layerButtons[i]->Update(mouseScreenPosition);
 		if (layerButtons[i]->GetPressed())
 		{
 			selectedLayer = i;
 			selectedTileID = 0;
+			editorPage = 0;
 			sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
 			for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
 			{
@@ -279,8 +306,10 @@ void Editor::Update()
 					}
 					else if (selectedLayer == 2)
 					{
-						if (y > 1)
+						if (y > 2)
 							state = false;
+						else if (y == 2 && x == 0)
+							state = true;
 						else if (y == 0)
 						{
 							if (x == 1)
@@ -293,7 +322,9 @@ void Editor::Update()
 					}
 					else
 					{
-						if (y > 1)
+						if (y > 2)
+							state = false;
+						else if (y == 2 && x == 0)
 							state = false;
 						else if (y == 0 && x == 2)
 							state = false;
@@ -305,6 +336,73 @@ void Editor::Update()
 			}
 		}
 	}
+	if (selectedLayer < 2)
+		for (vector<Button*>::size_type i = 0; i < pageButtons.size(); i++)
+		{
+			pageButtons[i]->Update(mouseScreenPosition);
+			if (pageButtons[i]->GetPressed())
+			{
+				editorPage = i;
+				selectedTileID = 0;
+				sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
+				for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+				{
+					for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
+					{
+						bool state;
+						if (editorPage == 0)
+						{
+							if (selectedLayer == 0)
+							{
+								if (y == 0)
+								{
+									if (x == 2)
+										state = false;
+									else
+										state = true;
+								}
+								else if (y > 3)
+									state = true;
+								else
+									state = false;
+							}
+							else
+							{
+								if (y == 0)
+								{
+									if (x == 0)
+										state = true;
+									else
+										state = false;
+								}
+								else if (y > 3)
+									state = false;
+								else
+									state = true;
+							}
+						}
+						else
+						{
+							if (selectedLayer == 0)
+							{
+								if (y == 0 && x == 0)
+									state = true;
+								else
+									state = false;
+							}
+							else
+							{
+								if (y < 6)
+									state = true;
+								else
+									state = false;
+							}
+						}
+						sidebarTileButtons[y][x]->SetActive(state);
+					}
+				}
+			}
+		}
 }
 
 void Editor::Render()
@@ -353,9 +451,16 @@ void Editor::Render()
 
 	saveUI->Render();
 	layerUI->Render();
+	if (selectedLayer < 2)
+		pageUI->Render();
 
 	if (selectedLayer < 2)
-		sidebarTiles->Render();
+	{
+		if (editorPage == 0)
+			sidebarTiles->Render();
+		else if (editorPage == 1)
+			sidebarTiles2->Render();
+	}
 	else
 		sidebarObjects->Render();
 
@@ -414,7 +519,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures, 0);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 0, 0);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -424,7 +529,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, 0, &textures, 1);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 1, 0);
 				row.push_back(tile);
 			}
 			tileLayerFront.push_back(row);
@@ -447,13 +552,17 @@ void Editor::StartMapSpawn(string name)
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
 				inputFile >> input;
-				int ID = stoi(input);
+				int ID = stoi(input), page;
 				if (ID < 10)
 					cout << " " << ID;
 				else
 					cout << ID;
+				if (ID >= sidebarTilesX * sidebarTilesY)
+					page = 1;
+				else
+					page = 0;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures, 0);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 0, page);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -465,13 +574,17 @@ void Editor::StartMapSpawn(string name)
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
 				inputFile >> input;
-				int ID = stoi(input);
+				int ID = stoi(input), page;
 				if (ID < 10)
 					cout << " " << ID;
 				else
 					cout << ID;
+				if (ID >= sidebarTilesX * sidebarTilesY)
+					page = 1;
+				else
+					page = 0;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, 0, &textures, 1);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1, page);
 				row.push_back(tile);
 			}
 			tileLayerFront.push_back(row);
@@ -482,7 +595,7 @@ void Editor::StartMapSpawn(string name)
 		for (int i = 0; i < objNum; i++)
 		{
 			Object *object;
-			int ID, xPos, yPos, channel, layer, textureID;
+			int ID, xPos, yPos, channel, layer, textureID, hold;
 			inputFile >> input;
 			ID = stoi(input);
 			inputFile >> input;
@@ -493,6 +606,8 @@ void Editor::StartMapSpawn(string name)
 			channel = stoi(input);
 			inputFile >> input;
 			layer = stoi(input);
+			inputFile >> input;
+			hold = stoi(input);
 
 			if (ID == 0)
 				textureID = 1;
@@ -502,7 +617,7 @@ void Editor::StartMapSpawn(string name)
 				textureID = 6;
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
-			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, &textures);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, "null", "null", hold, &textures);
 			object->SetChannel(channel);
 			objectLayer1.push_back(object);
 		}
@@ -512,6 +627,7 @@ void Editor::StartMapSpawn(string name)
 		{
 			Object *object;
 			int ID, xPos, yPos, channel, layer, textureID;
+			string script, facing;
 			inputFile >> input;
 			ID = stoi(input);
 			inputFile >> input;
@@ -522,6 +638,10 @@ void Editor::StartMapSpawn(string name)
 			channel = stoi(input);
 			inputFile >> input;
 			layer = stoi(input);
+			inputFile >> input;
+			script = input;
+			inputFile >> input;
+			facing = input;
 
 			if (ID == 0)
 				textureID = 1;
@@ -535,7 +655,7 @@ void Editor::StartMapSpawn(string name)
 				textureID = 10;
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
-			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, &textures);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, script, facing, -1, &textures);
 			object->SetChannel(channel);
 			objectLayer2.push_back(object);
 		}
@@ -548,6 +668,7 @@ void Editor::UISpawn()
 	selector = new UIElement(sf::Vector2i(sidebarWidth + tileSize / 2, tileSize / 2), tileSize, tileSize, 2, &textures);
 	sidebar = new UIElement(sidebarPosition, sidebarWidth, screenHeight, 0, &textures);
 	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+	sidebarTiles2 = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY2 * tileSize / 2), 0, 0, 11, &textures);
 	sidebarObjects = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2), 0, 0, 8, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
@@ -577,11 +698,18 @@ void Editor::UISpawn()
 	saveUI = new UIElement(sf::Vector2i(sidebarWidth / 2 - 50, 10), 100, 20, 3, &textures);
 	saveButton = new Button(sf::Vector2i(sidebarWidth / 2 - 100, 0), 100, 20);
 	layerUI = new UIElement(sf::Vector2i(sidebarWidth / 2 + 50, 10), 100, 20, 4, &textures);
+	pageUI = new UIElement(sf::Vector2i(10, 150), 20, 100, 12, &textures);
 	for (vector<Button*>::size_type i = 0; i < 4; i++)
 	{
 		sf::Vector2i position(sidebarWidth / 2 + 25 * i, 0);
 		Button *button = new Button(position, 25, 20);
 		layerButtons.push_back(button);
+	}
+	for (vector<Button*>::size_type i = 0; i < 2; i++)
+	{
+		sf::Vector2i position(0, 100 + 50 * i);
+		Button *button = new Button(position, 20, 50);
+		pageButtons.push_back(button);
 	}
 }
 
@@ -633,6 +761,7 @@ void Editor::SaveMap()
 			outputFile << object->GetMapPosition().y << endl;
 			outputFile << object->GetChannel() << endl;
 			outputFile << object->GetLayer() << endl;
+			outputFile << object->GetButtonHold() << endl;
 		}
 		outputFile << objectLayer2.size() << endl;
 		for (vector<Object*>::size_type i = 0; i < objectLayer2.size(); i++)
@@ -643,6 +772,8 @@ void Editor::SaveMap()
 			outputFile << object->GetMapPosition().y << endl;
 			outputFile << object->GetChannel() << endl;
 			outputFile << object->GetLayer() << endl;
+			outputFile << object->GetScript() << endl;
+			outputFile << object->GetFacing() << endl;
 		}
 		cout << "Done!" << endl;
 	}
@@ -657,4 +788,37 @@ int Editor::ChannelSet()
 		cin >> channel;
 	}
 	return channel;
+}
+
+string Editor::ScriptSet()
+{
+	string script = "null";
+	while (script == "null")
+	{
+		cout << "Please enter the script name you wish to use. (Do not enter null!)" << endl;
+		cin >> script;
+	}
+	return script;
+}
+
+string Editor::FacingSet()
+{
+	string facing = "null";
+	while (facing != "N" && facing != "W" && facing != "S" && facing != "E")
+	{
+		cout << "Please enter the direction you want the object to face. (N, W, S or E)" << endl;
+		cin >> facing;
+	}
+	return facing;
+}
+
+int Editor::ButtonHoldSet()
+{
+	int hold = -1;
+	while (hold < 0)
+	{
+		cout << "Please enter the holdlength of the button. (in positive milliseconds)" << endl;
+		cin >> hold;
+	}
+	return hold;
 }

@@ -6,13 +6,13 @@
 class Tile : public Entity
 {
 public:
-	Tile(sf::Vector2i position, int ID, int textureID, TextureHandler *textures, int layer);
+	Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, int page);
 	~Tile();
 	void Update(sf::Vector2i mousePosition);
 	void Render();
 	static void Initialize(sf::RenderWindow *mainWindow);
 	static sf::Vector2i GetSize();
-	static void IDChangeInfo(int ID, bool allowed, int layer);
+	static void IDChangeInfo(int ID, bool allowed, int layer, int page);
 	void SetID(int ID);
 	int GetID();
 	bool GetMouseover();

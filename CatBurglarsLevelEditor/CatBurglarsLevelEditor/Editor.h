@@ -25,6 +25,9 @@ private:
 	void UISpawn();
 	void SaveMap();
 	int ChannelSet();
+	string ScriptSet();
+	string FacingSet();
+	int ButtonHoldSet();
 };
 
 #endif

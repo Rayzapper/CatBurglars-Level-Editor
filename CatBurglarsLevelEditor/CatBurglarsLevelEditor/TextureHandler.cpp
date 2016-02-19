@@ -1,6 +1,7 @@
 #include "TextureHandler.h"
 
-static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture;
+static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture,
+	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -15,6 +16,7 @@ TextureHandler::~TextureHandler()
 void TextureHandler::Initialize()
 {
 	tileTexture.loadFromFile("Resources/TileMap.png");
+	tile2Texture.loadFromFile("Resources/Tilemap_2.png");
 	catTexture.loadFromFile("Resources/cat.png");
 	selectorTexture.loadFromFile("Resources/Selector.png");
 	saveTexture.loadFromFile("Resources/Save.png");
@@ -24,8 +26,12 @@ void TextureHandler::Initialize()
 	deleteTexture.loadFromFile("Resources/Delete.png");
 	doorTexture.loadFromFile("Resources/Door.png");
 	guardTexture.loadFromFile("Resources/Guard.png");
+	pageTexture.loadFromFile("Resources/PageButtons.png");
+	button2Texture.loadFromFile("Resources/Button2.png");
+	cameraTexture.loadFromFile("Resources/Camera.png");
+	computerTexture.loadFromFile("Resources/Computer.png");
 
-	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage;
+	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage;
 
 	deleteImage.loadFromFile("Resources/Delete.png");
 	catImage.loadFromFile("Resources/cat.png");
@@ -33,14 +39,20 @@ void TextureHandler::Initialize()
 	crateImage.loadFromFile("Resources/crate.png");
 	doorImage.loadFromFile("Resources/Door.png");
 	guardImage.loadFromFile("Resources/Guard.png");
+	button2Image.loadFromFile("Resources/Button2.png");
+	cameraImage.loadFromFile("Resources/CameraIcon.png");
+	computerImage.loadFromFile("Resources/Computer.png");
 
-	objectsTexture.create(192, 128);
+	objectsTexture.create(192, 192);
 	objectsTexture.update(deleteImage, 0, 0);
 	objectsTexture.update(catImage, 64, 0);
 	objectsTexture.update(buttonImage, 128, 0);
 	objectsTexture.update(crateImage, 0, 64);
 	objectsTexture.update(doorImage, 64, 64);
 	objectsTexture.update(guardImage, 128, 64);
+	objectsTexture.update(button2Image, 0, 128);
+	objectsTexture.update(cameraImage, 64, 128);
+	objectsTexture.update(computerImage, 128, 128);
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -67,6 +79,16 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &doorTexture;
 	else if (ID == 10)
 		return &guardTexture;
+	else if (ID == 11)
+		return &tile2Texture;
+	else if (ID == 12)
+		return &pageTexture;
+	else if (ID == 13)
+		return &button2Texture;
+	else if (ID == 14)
+		return &cameraTexture;
+	else if (ID == 15)
+		return &computerTexture;
 	else
 		return &deleteTexture;
 }
