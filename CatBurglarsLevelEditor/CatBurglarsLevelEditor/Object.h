@@ -9,7 +9,7 @@ public:
 	Object(sf::Vector2i position, sf::IntRect rect, int layer, int ID, int textureID, string script, string facing, int hold, TextureHandler *textures);
 	~Object();
 	void Update(sf::Vector2i mousePosition);
-	void Render();
+	void Render(int alpha);
 	static void Initialize(sf::RenderWindow *mainWindow, sf::Font *mainFont);
 	void SetChannel(int number);
 	void SetScript(string script);

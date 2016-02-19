@@ -24,7 +24,7 @@ void Button::Update(sf::Vector2i mousePosition)
 		mPressed = false;
 }
 
-void Button::Render()
+void Button::Render(int alpha)
 {
 	
 }

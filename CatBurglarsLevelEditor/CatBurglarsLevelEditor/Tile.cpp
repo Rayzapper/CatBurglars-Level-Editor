@@ -59,8 +59,9 @@ void Tile::Update(sf::Vector2i mousePosition)
 		mClicked = false;
 }
 
-void Tile::Render()
+void Tile::Render(int alpha)
 {
+	mSprite.setColor(sf::Color(255, 255, 255, alpha));
 	mSprite.setPosition(mPosition.x, mPosition.y);
 	window->draw(mSprite);
 }

@@ -9,7 +9,7 @@ public:
 	Button(sf::Vector2i position, int width, int height);
 	~Button();
 	void Update(sf::Vector2i mousePosition);
-	void Render();
+	void Render(int alpha);
 	bool GetMouseover();
 	bool GetPressed();
 	void SetActive(bool state);

@@ -12,7 +12,7 @@ public:
 	Entity(sf::Vector2i position, sf::IntRect rect);
 	~Entity();
 	virtual void Update(sf::Vector2i mousePosition) = 0;
-	virtual void Render() = 0;
+	virtual void Render(int alpha) = 0;
 	void SetPosition(sf::Vector2i newPosition);
 	void ChangePosition(sf::Vector2i change);
 	sf::Vector2i GetPosition();

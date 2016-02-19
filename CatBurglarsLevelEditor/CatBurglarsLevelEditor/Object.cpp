@@ -24,8 +24,9 @@ void Object::Update(sf::Vector2i mousePosition)
 
 }
 
-void Object::Render()
+void Object::Render(int alpha)
 {
+	mSprite.setColor(sf::Color(255, 255, 255, alpha));
 	int left = 0, top = 0;
 	if (mFacing == "S")
 	{

@@ -9,7 +9,7 @@ public:
 	UIElement(sf::Vector2i position, int hitboxWidth, int hitboxHeight, int textureID, TextureHandler *textures);
 	~UIElement();
 	void Update(sf::Vector2i mousePosition);
-	void Render();
+	void Render(int alpha);
 	static void Initialize(sf::RenderWindow *mainWindow);
 	bool GetMouseover();
 };

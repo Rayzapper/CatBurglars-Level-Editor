@@ -27,8 +27,9 @@ void UIElement::Update(sf::Vector2i mousePosition)
 	mMouse = mHitBox.contains(mousePosition);
 }
 
-void UIElement::Render()
+void UIElement::Render(int alpha)
 {
+	mSprite.setColor(sf::Color(255, 255, 255, alpha));
 	mSprite.setPosition(mPosition.x, mPosition.y);
 	window->draw(mSprite);
 }

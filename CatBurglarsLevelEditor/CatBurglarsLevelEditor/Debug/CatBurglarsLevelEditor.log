@@ -1,7 +1,32 @@
-﻿  Tile.cpp
+﻿  UIElement.cpp
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\uielement.cpp(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\uielement.cpp(33): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Tile.cpp
 \\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(22): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 \\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(24): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 \\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 \\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(50): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(64): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\tile.cpp(65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Object.cpp
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\object.cpp(53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\object.cpp(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Editor.cpp
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(32): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(34): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(35): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(103): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(119): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(123): warning C4305: '-=': truncation from 'double' to 'float'
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(129): warning C4305: '+=': truncation from 'double' to 'float'
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(141): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(142): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(460): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+\\hsnas6\studenthome\2014\a14rasli\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(490): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Button.cpp
+  Generating Code...
+  Compiling...
+  Entity.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Main.cpp
   CatBurglarsLevelEditor.vcxproj -> \\hsnas6\StudentHome\2014\a14rasli\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe

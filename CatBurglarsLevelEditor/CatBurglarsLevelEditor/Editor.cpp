@@ -417,25 +417,34 @@ void Editor::Render()
 	{
 		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 		{
-			tileLayerBottom[y][x]->Render();
+			tileLayerBottom[y][x]->Render(255);
 		}
 	}
 	for (TileLayer::size_type y = 0; y < tileLayerFront.size(); y++)
 	{
 		for (TileRow::size_type x = 0; x < tileLayerFront[y].size(); x++)
 		{
-			tileLayerFront[y][x]->Render();
+			int alpha = 255;
+			if (selectedLayer < 1)
+				alpha = 127;
+			tileLayerFront[y][x]->Render(alpha);
 		}
 	}
 	for (vector<Object*>::size_type i = 0; i < objectLayer1.size(); i++)
 	{
-		objectLayer1[i]->Render();
+		int alpha = 255;
+		if (selectedLayer < 2)
+			alpha = 127;
+		objectLayer1[i]->Render(alpha);
 	}
 	for (vector<Object*>::size_type i = 0; i < objectLayer2.size(); i++)
 	{
-		objectLayer2[i]->Render();
+		int alpha = 255;
+		if (selectedLayer < 3)
+			alpha = 127;
+		objectLayer2[i]->Render(alpha);
 	}
-	selector->Render();
+	selector->Render(255);
 
 	window->setView(*sidebarView);
 
@@ -452,20 +461,20 @@ void Editor::Render()
 	sidebar.setPosition(0, 0);
 	window->draw(sidebar);
 
-	saveUI->Render();
-	layerUI->Render();
+	saveUI->Render(255);
+	layerUI->Render(255);
 	if (selectedLayer < 2)
-		pageUI->Render();
+		pageUI->Render(255);
 
 	if (selectedLayer < 2)
 	{
 		if (editorPage == 0)
-			sidebarTiles->Render();
+			sidebarTiles->Render(255);
 		else if (editorPage == 1)
-			sidebarTiles2->Render();
+			sidebarTiles2->Render(255);
 	}
 	else
-		sidebarObjects->Render();
+		sidebarObjects->Render(255);
 
 	sf::Sprite inactiveSprite;
 	sf::Texture *texture;
@@ -484,7 +493,7 @@ void Editor::Render()
 		}
 	}
 
-	sidebarSelection->Render();
+	sidebarSelection->Render(255);
 
 	window->display();
 }
