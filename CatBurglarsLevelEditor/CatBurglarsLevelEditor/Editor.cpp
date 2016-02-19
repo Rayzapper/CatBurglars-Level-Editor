@@ -2,7 +2,7 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 7, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 3;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 7, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4;
 static bool load, focus;
 static string mapName;
 
@@ -181,12 +181,13 @@ void Editor::Update()
 						{
 							//Cat
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 1, "null", "null", -1, &textures);
+							object->SetChannel(ChannelSet(1));
 						}
 						if (selectedTileID == 2)
 						{
 							//Button
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, "null", "null", 0, &textures);
-							object->SetChannel(ChannelSet());
+							object->SetChannel(ChannelSet(0));
 							object->SetButtonHold(ButtonHoldSet());
 						}
 						if (selectedTileID == 3)
@@ -198,7 +199,7 @@ void Editor::Update()
 						{
 							//Door
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, "null", "null", -1, &textures);
-							object->SetChannel(ChannelSet());
+							object->SetChannel(ChannelSet(0));
 							object->SetFacing(FacingSet());
 						}
 						if (selectedTileID == 5)
@@ -209,24 +210,32 @@ void Editor::Update()
 						}
 						if (selectedTileID == 6)
 						{
-							//Button2
+							//ToggleButton
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 13, "null", "null", 0, &textures);
-							object->SetChannel(ChannelSet());
+							object->SetChannel(ChannelSet(0));
 							object->SetButtonHold(ButtonHoldSet());
 						}
 						if (selectedTileID == 7)
 						{
 							//Camera
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 14, "null", "null", -1, &textures);
-							object->SetChannel(ChannelSet());
+							object->SetChannel(ChannelSet(0));
 							object->SetFacing(FacingSet());
-							object->SetRange(RangeSet());
+							object->SetRange(RangeSet(0));
 						}
 						if (selectedTileID == 8)
 						{
 							//Computer
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 15, "null", "null", -1, &textures);
-							object->SetChannel(ChannelSet());
+							object->SetChannel(ChannelSet(0));
+						}
+						if (selectedTileID == 9)
+						{
+							//MultiDoor
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 16, "null", "null", -1, &textures);
+							object->SetChannel(ChannelSet(0));
+							object->SetFacing(FacingSet());
+							object->SetRange(RangeSet(1));
 						}
 						layer->push_back(object);
 					}
@@ -323,7 +332,9 @@ void Editor::Update()
 					}
 					else
 					{
-						if (y > 2)
+						if (y > 3)
+							state = false;
+						else if (y == 3 && x != 0)
 							state = false;
 						else if (y == 2 && x == 0)
 							state = false;
@@ -547,6 +558,7 @@ void Editor::StartMapSpawn(string name)
 			tileLayerFront.push_back(row);
 		}
 	}
+	//-----------------------------------------------------Laddningskod----------------------------------------------------------------------------------------------------
 	else
 	{
 		ifstream inputFile("Maps/" + name + ".txt");
@@ -803,14 +815,21 @@ void Editor::SaveMap()
 	}
 }
 
-int Editor::ChannelSet()
+int Editor::ChannelSet(int type)
 {
 	int channel = -1;
-	while (channel < 0 || channel > 10)
-	{
-		cout << "Please enter the channel number you wish to use. (1 to 10)" << endl;
-		cin >> channel;
-	}
+	if (type == 0)
+		while (channel < 1 || channel > 10)
+		{
+			cout << "Please enter the channel number you wish to use. (1 to 10)" << endl;
+			cin >> channel;
+		}
+	else
+		while (channel < 1 || channel > 4)
+		{
+			cout << "Please enter the cat number. (1 to 4)" << endl;
+			cin >> channel;
+		}
 	return channel;
 }
 
@@ -847,12 +866,15 @@ int Editor::ButtonHoldSet()
 	return hold;
 }
 
-int Editor::RangeSet()
+int Editor::RangeSet(int type)
 {
 	int range = -1;
 	while (range < 0)
 	{
-		cout << "Please enter the range of the object. (in tiles)" << endl;
+		if (type == 0)
+			cout << "Please enter the range of the object. (in tiles)" << endl;
+		else
+			cout << "Please enter the range of channels for the object. (positive)" << endl;
 		cin >> range;
 	}
 	return range;

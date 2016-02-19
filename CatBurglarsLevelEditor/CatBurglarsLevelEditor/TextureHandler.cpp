@@ -1,7 +1,7 @@
 #include "TextureHandler.h"
 
 static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture,
-	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture;
+	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture;
 
 TextureHandler::TextureHandler()
 {
@@ -30,8 +30,9 @@ void TextureHandler::Initialize()
 	button2Texture.loadFromFile("Resources/Button2.png");
 	cameraTexture.loadFromFile("Resources/Camera.png");
 	computerTexture.loadFromFile("Resources/Computer.png");
+	door2Texture.loadFromFile("Resources/Door2.png");
 
-	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage;
+	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image;
 
 	deleteImage.loadFromFile("Resources/Delete.png");
 	catImage.loadFromFile("Resources/cat.png");
@@ -42,8 +43,9 @@ void TextureHandler::Initialize()
 	button2Image.loadFromFile("Resources/Button2.png");
 	cameraImage.loadFromFile("Resources/CameraIcon.png");
 	computerImage.loadFromFile("Resources/Computer.png");
+	door2Image.loadFromFile("Resources/Door2Icon.png");
 
-	objectsTexture.create(192, 192);
+	objectsTexture.create(192, 256);
 	objectsTexture.update(deleteImage, 0, 0);
 	objectsTexture.update(catImage, 64, 0);
 	objectsTexture.update(buttonImage, 128, 0);
@@ -53,6 +55,7 @@ void TextureHandler::Initialize()
 	objectsTexture.update(button2Image, 0, 128);
 	objectsTexture.update(cameraImage, 64, 128);
 	objectsTexture.update(computerImage, 128, 128);
+	objectsTexture.update(door2Image, 0, 192);
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -89,6 +92,8 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &cameraTexture;
 	else if (ID == 15)
 		return &computerTexture;
+	else if (ID == 16)
+		return &door2Texture;
 	else
 		return &deleteTexture;
 }

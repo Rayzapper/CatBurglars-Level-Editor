@@ -25,11 +25,11 @@ private:
 	int LoadObjectTextureID(int ID);
 	void UISpawn();
 	void SaveMap();
-	int ChannelSet();
+	int ChannelSet(int type);
 	string ScriptSet();
 	string FacingSet();
 	int ButtonHoldSet();
-	int RangeSet();
+	int RangeSet(int type);
 };
 
 #endif
