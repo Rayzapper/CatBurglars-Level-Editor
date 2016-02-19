@@ -22,12 +22,14 @@ private:
 	void Render();
 	void StartConfiguration();
 	void StartMapSpawn(string name);
+	int LoadObjectTextureID(int ID);
 	void UISpawn();
 	void SaveMap();
 	int ChannelSet();
 	string ScriptSet();
 	string FacingSet();
 	int ButtonHoldSet();
+	int RangeSet();
 };
 
 #endif

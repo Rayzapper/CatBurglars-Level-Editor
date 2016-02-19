@@ -88,6 +88,11 @@ void Object::SetButtonHold(int hold)
 	mHoldlength = hold;
 }
 
+void Object::SetRange(int range)
+{
+	mRange = range;
+}
+
 sf::Vector2i Object::GetMapPosition(){ return mTilePosition; }
 
 int Object::GetChannel(){ return mChannel; }
@@ -101,3 +106,5 @@ string Object::GetScript(){ return mScript; }
 string Object::GetFacing(){ return mFacing; }
 
 int Object::GetButtonHold(){ return mHoldlength; }
+
+int Object::GetRange() { return mRange; }

@@ -15,6 +15,7 @@ public:
 	void SetScript(string script);
 	void SetFacing(string facing);
 	void SetButtonHold(int hold);
+	void SetRange(int range);
 	sf::Vector2i GetMapPosition();
 	int GetChannel();
 	int GetID();
@@ -22,8 +23,9 @@ public:
 	string GetScript();
 	string GetFacing();
 	int GetButtonHold();
+	int GetRange();
 private:
-	int mObjectID, mChannel = -1, mLayer, mHoldlength = -1;
+	int mObjectID, mChannel = -1, mLayer, mHoldlength = -1, mRange = -1;
 	string mScript, mFacing;
 	sf::Vector2i mTilePosition;
 };

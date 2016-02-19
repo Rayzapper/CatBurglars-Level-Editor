@@ -196,10 +196,10 @@ void Editor::Update()
 						}
 						if (selectedTileID == 4)
 						{
-							//Door NS
+							//Door
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet());
-							object->SetScript(ScriptSet());
+							object->SetFacing(FacingSet());
 						}
 						if (selectedTileID == 5)
 						{
@@ -220,6 +220,7 @@ void Editor::Update()
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 14, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet());
 							object->SetFacing(FacingSet());
+							object->SetRange(RangeSet());
 						}
 						if (selectedTileID == 8)
 						{
@@ -609,12 +610,7 @@ void Editor::StartMapSpawn(string name)
 			inputFile >> input;
 			hold = stoi(input);
 
-			if (ID == 0)
-				textureID = 1;
-			else if (ID == 1)
-				textureID = 5;
-			else if (ID == 2)
-				textureID = 6;
+			textureID = LoadObjectTextureID(ID);
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
 			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, "null", "null", hold, &textures);
@@ -626,7 +622,7 @@ void Editor::StartMapSpawn(string name)
 		for (int i = 0; i < objNum; i++)
 		{
 			Object *object;
-			int ID, xPos, yPos, channel, layer, textureID;
+			int ID, xPos, yPos, channel, layer, textureID, range;
 			string script, facing;
 			inputFile >> input;
 			ID = stoi(input);
@@ -642,24 +638,40 @@ void Editor::StartMapSpawn(string name)
 			script = input;
 			inputFile >> input;
 			facing = input;
+			inputFile >> input;
+			range = stoi(input);
 
-			if (ID == 0)
-				textureID = 1;
-			else if (ID == 1)
-				textureID = 5;
-			else if (ID == 2)
-				textureID = 6;
-			else if (ID == 3)
-				textureID = 9;
-			else if (ID == 4)
-				textureID = 10;
+			textureID = LoadObjectTextureID(ID);
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
 			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, script, facing, -1, &textures);
 			object->SetChannel(channel);
+			object->SetRange(range);
 			objectLayer2.push_back(object);
 		}
 	}
+}
+
+int Editor::LoadObjectTextureID(int ID)
+{
+	int textureID = -1;
+	if (ID == 0)
+		textureID = 1;
+	else if (ID == 1)
+		textureID = 5;
+	else if (ID == 2)
+		textureID = 6;
+	else if (ID == 3)
+		textureID = 9;
+	else if (ID == 4)
+		textureID = 10;
+	else if (ID == 5)
+		textureID = 13;
+	else if (ID == 6)
+		textureID = 14;
+	else if (ID == 7)
+		textureID = 15;
+	return textureID;
 }
 
 void Editor::UISpawn()
@@ -774,6 +786,7 @@ void Editor::SaveMap()
 			outputFile << object->GetLayer() << endl;
 			outputFile << object->GetScript() << endl;
 			outputFile << object->GetFacing() << endl;
+			outputFile << object->GetRange() << endl;
 		}
 		cout << "Done!" << endl;
 	}
@@ -821,4 +834,15 @@ int Editor::ButtonHoldSet()
 		cin >> hold;
 	}
 	return hold;
+}
+
+int Editor::RangeSet()
+{
+	int range = -1;
+	while (range < 0)
+	{
+		cout << "Please enter the range of the object. (in tiles)" << endl;
+		cin >> range;
+	}
+	return range;
 }
