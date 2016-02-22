@@ -228,6 +228,9 @@ void Editor::Update()
 							//Computer
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 15, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet(0));
+							object->SetRange(RangeSet(2));
+							if (object->GetRange() == 0)
+								object->SetButtonHold(ButtonHoldSet());
 						}
 						if (selectedTileID == 9)
 						{
@@ -828,9 +831,9 @@ int Editor::ChannelSet(int type)
 {
 	int channel = -1;
 	if (type == 0)
-		while (channel < 1 || channel > 10)
+		while (channel < 0)
 		{
-			cout << "Please enter the channel number you wish to use. (1 to 10)" << endl;
+			cout << "Please enter the channel number you wish to use. (positive)" << endl;
 			cin >> channel;
 		}
 	else
@@ -878,13 +881,22 @@ int Editor::ButtonHoldSet()
 int Editor::RangeSet(int type)
 {
 	int range = -1;
-	while (range < 0)
+	if (type < 2)
+		while (range < 0)
+		{
+			if (type == 0)
+				cout << "Please enter the range of the object. (in tiles)" << endl;
+			else
+				cout << "Please enter the range of channels for the object. (positive)" << endl;
+			cin >> range;
+		}
+	else
 	{
-		if (type == 0)
-			cout << "Please enter the range of the object. (in tiles)" << endl;
-		else
-			cout << "Please enter the range of channels for the object. (positive)" << endl;
-		cin >> range;
+		while (range < 0 || range > 1)
+		{
+			cout << "Please enter whether or not the object is a toggle. (0 for hold, 1 for toggle)" << endl;
+			cin >> range;
+		}
 	}
 	return range;
 }
