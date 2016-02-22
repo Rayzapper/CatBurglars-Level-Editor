@@ -9,7 +9,7 @@ static string mapName;
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 static TileLayer tileLayerBottom, tileLayerFront;
-static vector<Object*> objectLayer1, objectLayer2;
+static vector<Object*> objectLayer1, objectLayer2, eventLayer;
 
 static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarTiles2, *sidebarObjects, *saveUI, *layerUI, *pageUI;
 static Button *saveButton;
@@ -174,7 +174,7 @@ void Editor::Update()
 						}
 					}
 
-					if (selectedTileID != 0)
+					if (selectedTileID != 0 && selectedTileID != 24)
 					{
 						Object *object;
 						if (selectedTileID == 1)
@@ -188,7 +188,7 @@ void Editor::Update()
 							//Button
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 5, "null", "null", 0, &textures);
 							object->SetChannel(ChannelSet(0));
-							object->SetButtonHold(ButtonHoldSet());
+							object->SetButtonHold(ButtonHoldSet(0));
 						}
 						if (selectedTileID == 3)
 						{
@@ -213,7 +213,7 @@ void Editor::Update()
 							//ToggleButton
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 13, "null", "null", 0, &textures);
 							object->SetChannel(ChannelSet(0));
-							object->SetButtonHold(ButtonHoldSet());
+							object->SetButtonHold(ButtonHoldSet(0));
 						}
 						if (selectedTileID == 7)
 						{
@@ -222,6 +222,7 @@ void Editor::Update()
 							object->SetChannel(ChannelSet(0));
 							object->SetFacing(FacingSet());
 							object->SetRange(RangeSet(0));
+							object->SetButtonHold(ButtonHoldSet(1));
 						}
 						if (selectedTileID == 8)
 						{
@@ -230,7 +231,7 @@ void Editor::Update()
 							object->SetChannel(ChannelSet(0));
 							object->SetRange(RangeSet(2));
 							if (object->GetRange() == 0)
-								object->SetButtonHold(ButtonHoldSet());
+								object->SetButtonHold(ButtonHoldSet(0));
 						}
 						if (selectedTileID == 9)
 						{
@@ -247,6 +248,27 @@ void Editor::Update()
 						}
 						layer->push_back(object);
 					}
+				}
+				if (tileLayerBottom[y][x]->GetRightClicked() && !mouseOverSidebar)
+				{
+					//Event
+					for (vector<Object*>::size_type i = 0; i < eventLayer.size(); i++)
+					{
+						int xPos = eventLayer[i]->GetMapPosition().x, yPos = eventLayer[i]->GetMapPosition().y;
+						if (xPos == x && yPos == y)
+						{
+							eventLayer.erase(eventLayer.begin() + i);
+							i--;
+						}
+					}
+						Object *object;
+
+						object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 18, "null", "null", -1, &textures);
+						object->SetRange(RangeSet(3));
+						if (object->GetRange() == 0)
+							object->SetChannel(ChannelSet(2));
+
+						eventLayer.push_back(object);
 				}
 			}
 		}
@@ -462,6 +484,13 @@ void Editor::Render()
 		if (selectedLayer < 3)
 			alpha = 127;
 		objectLayer2[i]->Render(alpha);
+	}
+	for (vector<Object*>::size_type i = 0; i < eventLayer.size(); i++)
+	{
+		int alpha = 255;
+		if (selectedLayer < 3)
+			alpha = 127;
+		eventLayer[i]->Render(alpha);
 	}
 	selector->Render(255);
 
@@ -680,6 +709,12 @@ void Editor::StartMapSpawn(string name)
 			object->SetRange(range);
 			objectLayer2.push_back(object);
 		}
+		inputFile >> input;
+		objNum = stoi(input);
+		for (int i = 0; i < objNum; i++)
+		{
+			// Event laddning
+		}
 	}
 }
 
@@ -780,7 +815,9 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 			{
 				int ID = tileLayerBottom[y][x]->GetID();
-				if (ID < 10)
+				if (ID == 24)
+					outputFile << "00" << " ";
+				else if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
 					outputFile << ID << " ";
@@ -792,7 +829,9 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerFront[y].size(); x++)
 			{
 				int ID = tileLayerFront[y][x]->GetID();
-				if (ID < 10)
+				if (ID == 24)
+					outputFile << "00" << " ";
+				else if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
 					outputFile << ID << " ";
@@ -823,6 +862,11 @@ void Editor::SaveMap()
 			outputFile << object->GetFacing() << endl;
 			outputFile << object->GetRange() << endl;
 		}
+		outputFile << eventLayer.size() << endl;
+		for (vector<Object*>::size_type i = 0; i < eventLayer.size(); i++)
+		{
+			// Event Sparning
+		}
 		cout << "Done!" << endl;
 	}
 }
@@ -830,11 +874,19 @@ void Editor::SaveMap()
 int Editor::ChannelSet(int type)
 {
 	int channel = -1;
-	if (type == 0)
+	if (type != 1)
 		while (channel < 0)
 		{
-			cout << "Please enter the channel number you wish to use. (positive)" << endl;
-			cin >> channel;
+			if (type == 0)
+			{
+				cout << "Please enter the channel number you wish to use. (positive)" << endl;
+				cin >> channel;
+			}
+			else
+			{
+				cout << "Please enter the dialog ID number you wish to use." << endl;
+				cin >> channel;
+			}
 		}
 	else
 		while (channel < 1 || channel > 4)
@@ -867,12 +919,15 @@ string Editor::FacingSet()
 	return facing;
 }
 
-int Editor::ButtonHoldSet()
+int Editor::ButtonHoldSet(int type)
 {
 	int hold = -1;
 	while (hold < 0)
 	{
-		cout << "Please enter the holdlength of the button. (in positive milliseconds)" << endl;
+		if (type == 0)
+			cout << "Please enter the holdlength of the button. (in positive milliseconds)" << endl;
+		else
+			cout << "Please enter the range of channels for the object. (positive)" << endl;
 		cin >> hold;
 	}
 	return hold;
@@ -894,8 +949,16 @@ int Editor::RangeSet(int type)
 	{
 		while (range < 0 || range > 1)
 		{
-			cout << "Please enter whether or not the object is a toggle. (0 for hold, 1 for toggle)" << endl;
-			cin >> range;
+			if (type == 2)
+			{
+				cout << "Please enter whether or not the object is a toggle. (0 for hold, 1 for toggle)" << endl;
+				cin >> range;
+			}
+			else
+			{
+				cout << "Please enter whether the event is a dialog or a win. (0 for dialog, 1 for win)" << endl;
+				cin >> range;
+			}
 		}
 	}
 	return range;

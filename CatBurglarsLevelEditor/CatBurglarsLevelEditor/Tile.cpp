@@ -54,9 +54,16 @@ void Tile::Update(sf::Vector2i mousePosition)
 		}
 		else
 			mClicked = false;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+			mRightClicked = true;
+		else
+			mRightClicked = false;
 	}
 	else
+	{
 		mClicked = false;
+		mRightClicked = false;
+	}
 }
 
 void Tile::Render(int alpha)
@@ -94,3 +101,5 @@ int Tile::GetID(){ return mTileID; }
 bool Tile::GetMouseover(){ return mMouse; }
 
 bool Tile::GetClicked(){ return mClicked; }
+
+bool Tile::GetRightClicked() { return mRightClicked; }

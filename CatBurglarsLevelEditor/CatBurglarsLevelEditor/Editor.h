@@ -28,7 +28,7 @@ private:
 	int ChannelSet(int type);
 	string ScriptSet();
 	string FacingSet();
-	int ButtonHoldSet();
+	int ButtonHoldSet(int type);
 	int RangeSet(int type);
 };
 

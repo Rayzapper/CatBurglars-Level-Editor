@@ -17,9 +17,10 @@ public:
 	int GetID();
 	bool GetMouseover();
 	bool GetClicked();
+	bool GetRightClicked();
 private:
 	int mTileID = 0, mLayer;
-	bool mClicked;
+	bool mClicked, mRightClicked;
 };
 
 #endif
