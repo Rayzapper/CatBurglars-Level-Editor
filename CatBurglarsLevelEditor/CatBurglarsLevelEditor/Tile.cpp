@@ -85,7 +85,7 @@ void Tile::IDChangeInfo(int ID, bool allowed, int layer, int page)
 	selectedID = ID;
 	selectedID += (page * 24);
 	changeAllowed = !allowed;
-	if (layer > 1)
+	if (layer == 2 || layer == 3)
 		changeAllowed = false;
 	currentLayer = layer;
 	currentPage = page;

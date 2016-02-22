@@ -155,7 +155,7 @@ void Editor::Update()
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
-				if (selectedLayer > 1 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
+				if (selectedLayer > 1 && selectedLayer != 4 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
 				{
 					vector<Object*>* layer;
 
@@ -351,7 +351,7 @@ void Editor::Update()
 						else
 							state = false;
 					}
-					else if (selectedLayer == 1)
+					else if (selectedLayer == 1 || selectedLayer == 4)
 					{
 						if (y == 0)
 						{
@@ -399,7 +399,7 @@ void Editor::Update()
 			}
 		}
 	}
-	if (selectedLayer < 2)
+	if (selectedLayer < 2 || selectedLayer == 4)
 		for (vector<Button*>::size_type i = 0; i < pageButtons.size(); i++)
 		{
 			pageButtons[i]->Update(mouseScreenPosition);
@@ -492,16 +492,6 @@ void Editor::Render()
 			tileLayerWalls[y][x]->Render(alpha);
 		}
 	}
-	for (TileLayer::size_type y = 0; y < tileLayerTop.size(); y++)
-	{
-		for (TileRow::size_type x = 0; x < tileLayerTop[y].size(); x++)
-		{
-			int alpha = 255;
-			if (selectedLayer < 4)
-				alpha = 127;
-			tileLayerTop[y][x]->Render(alpha);
-		}
-	}
 	for (vector<Object*>::size_type i = 0; i < objectLayer1.size(); i++)
 	{
 		int alpha = 255;
@@ -523,6 +513,16 @@ void Editor::Render()
 			alpha = 127;
 		eventLayer[i]->Render(alpha);
 	}
+	for (TileLayer::size_type y = 0; y < tileLayerTop.size(); y++)
+	{
+		for (TileRow::size_type x = 0; x < tileLayerTop[y].size(); x++)
+		{
+			int alpha = 255;
+			if (selectedLayer < 4)
+				alpha = 127;
+			tileLayerTop[y][x]->Render(alpha);
+		}
+	}
 	selector->Render(255);
 
 	window->setView(*sidebarView);
@@ -534,18 +534,20 @@ void Editor::Render()
 		sidebar.setFillColor(sf::Color::Yellow);
 	else if (selectedLayer == 2)
 		sidebar.setFillColor(sf::Color::Blue);
-	else
+	else if (selectedLayer == 3)
 		sidebar.setFillColor(sf::Color::Green);
+	else
+		sidebar.setFillColor(sf::Color::Magenta);
 	sidebar.setSize(sf::Vector2f(sidebarWidth, screenHeight));
 	sidebar.setPosition(0, 0);
 	window->draw(sidebar);
 
 	saveUI->Render(255);
 	layerUI->Render(255);
-	if (selectedLayer < 2)
+	if (selectedLayer < 2 || selectedLayer == 4)
 		pageUI->Render(255);
 
-	if (selectedLayer < 2)
+	if (selectedLayer < 2 || selectedLayer == 4)
 	{
 		if (editorPage == 0)
 			sidebarTiles->Render(255);
@@ -630,7 +632,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 1, 0);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 4, 0);
 				row.push_back(tile);
 			}
 			tileLayerTop.push_back(row);
@@ -692,7 +694,7 @@ void Editor::StartMapSpawn(string name)
 			tileLayerWalls.push_back(row);
 			cout << endl;
 		}
-		/*for (int y = 0; y < currentMapSizeY; y++)
+		for (int y = 0; y < currentMapSizeY; y++)
 		{
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
@@ -708,12 +710,12 @@ void Editor::StartMapSpawn(string name)
 				else
 					page = 0;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1, page);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 4, page);
 				row.push_back(tile);
 			}
 			tileLayerTop.push_back(row);
 			cout << endl;
-		}*/
+		}
 
 		inputFile >> input;
 		int objNum = stoi(input);
@@ -774,8 +776,8 @@ void Editor::StartMapSpawn(string name)
 			inputFile >> input;
 			range = stoi(input);
 
-			//inputFile >> input;
-			//hold = stoi(input);
+			inputFile >> input;
+			hold = stoi(input);
 
 			textureID = LoadObjectTextureID(ID);
 
@@ -877,10 +879,10 @@ void Editor::UISpawn()
 	saveButton = new Button(sf::Vector2i(sidebarWidth / 2 - 100, 0), 100, 20);
 	layerUI = new UIElement(sf::Vector2i(sidebarWidth / 2 + 50, 10), 100, 20, 4, &textures);
 	pageUI = new UIElement(sf::Vector2i(10, 150), 20, 100, 12, &textures);
-	for (vector<Button*>::size_type i = 0; i < 4; i++)
+	for (vector<Button*>::size_type i = 0; i < 5; i++)
 	{
-		sf::Vector2i position(sidebarWidth / 2 + 25 * i, 0);
-		Button *button = new Button(position, 25, 20);
+		sf::Vector2i position(sidebarWidth / 2 + 20 * i, 0);
+		Button *button = new Button(position, 20, 20);
 		layerButtons.push_back(button);
 	}
 	for (vector<Button*>::size_type i = 0; i < 2; i++)
