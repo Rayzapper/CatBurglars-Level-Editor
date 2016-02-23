@@ -44,7 +44,7 @@ void TextureHandler::Initialize()
 	guardImage.loadFromFile("Resources/Guard.png");
 	button2Image.loadFromFile("Resources/Button2.png");
 	cameraImage.loadFromFile("Resources/CameraIcon.png");
-	computerImage.loadFromFile("Resources/Computer.png");
+	computerImage.loadFromFile("Resources/ComputerIcon.png");
 	door2Image.loadFromFile("Resources/Door2Icon.png");
 	crate2Image.loadFromFile("Resources/crate2.png");
 

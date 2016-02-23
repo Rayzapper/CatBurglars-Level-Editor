@@ -16,7 +16,7 @@ static Button *saveButton;
 static vector<Button*> layerButtons, pageButtons;
 static vector<vector<Button*>> sidebarTileButtons;
 
-static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, editorPage = 0;
+static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, editorPage = 0, sidebarScroll = 0;
 
 static TextureHandler textures;
 
@@ -69,6 +69,14 @@ void Editor::Run()
 				focus = true;
 			if (event.type == sf::Event::LostFocus)
 				focus = false;
+			if (event.type == sf::Event::MouseWheelScrolled)
+			{
+				sidebarScroll -= event.mouseWheelScroll.delta * 16;
+				if (sidebarScroll < 0)
+					sidebarScroll = 0;
+				if (sidebarScroll > 32)
+					sidebarScroll = 32;
+			}
 		}
 		if (focus)
 		{
@@ -232,6 +240,7 @@ void Editor::Update()
 							object->SetRange(RangeSet(2));
 							if (object->GetRange() == 0)
 								object->SetButtonHold(ButtonHoldSet(0));
+							object->SetFacing(FacingSet());
 						}
 						if (selectedTileID == 9)
 						{
@@ -319,6 +328,11 @@ void Editor::Update()
 	layerUI->Update(mouseScreenPosition);
 	pageUI->Update(mouseScreenPosition);
 	saveButton->Update(mouseScreenPosition);
+
+	/*sf::Vector2i sidebarPosition(sidebarWidth / 2, screenHeight / 2);
+	sidebarTiles->SetPosition(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2 - sidebarScroll));
+	sidebarTiles2->SetPosition(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY2 * tileSize / 2 - sidebarScroll));
+	sidebarObjects->SetPosition(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2 - sidebarScroll));*/
 	if (saveButton->GetPressed())
 	{
 		SaveMap();
@@ -532,23 +546,52 @@ void Editor::Render()
 
 	window->setView(*sidebarView);
 
-	sf::RectangleShape sidebar;
+	sf::RectangleShape sidebar, cover1, cover2, paletteOutline;
 	if (selectedLayer == 0)
+	{
 		sidebar.setFillColor(sf::Color::Red);
+		cover1.setFillColor(sf::Color::Red);
+		cover2.setFillColor(sf::Color::Red);
+	}
 	else if (selectedLayer == 1)
+	{
 		sidebar.setFillColor(sf::Color::Yellow);
+		cover1.setFillColor(sf::Color::Yellow);
+		cover2.setFillColor(sf::Color::Yellow);
+	}
 	else if (selectedLayer == 2)
+	{
 		sidebar.setFillColor(sf::Color::Blue);
+		cover1.setFillColor(sf::Color::Blue);
+		cover2.setFillColor(sf::Color::Blue);
+	}
 	else if (selectedLayer == 3)
+	{
 		sidebar.setFillColor(sf::Color::Green);
+		cover1.setFillColor(sf::Color::Green);
+		cover2.setFillColor(sf::Color::Green);
+	}
 	else
+	{
 		sidebar.setFillColor(sf::Color::Magenta);
+		cover1.setFillColor(sf::Color::Magenta);
+		cover2.setFillColor(sf::Color::Magenta);
+	}
+
+	paletteOutline.setFillColor(sf::Color::Transparent);
+	paletteOutline.setOutlineThickness(4);
+	paletteOutline.setOutlineColor(sf::Color(0, 0, 0));
+
 	sidebar.setSize(sf::Vector2f(sidebarWidth, screenHeight));
+	cover1.setSize(sf::Vector2f(sidebarWidth, 28));
+	cover2.setSize(sf::Vector2f(sidebarWidth, 28));
+	paletteOutline.setSize(sf::Vector2f(tileSize * 3, screenHeight - tileSize));
 	sidebar.setPosition(0, 0);
+	cover1.setPosition(0, 0);
+	cover2.setPosition(0, screenHeight - 28);
+	paletteOutline.setPosition(tileSize / 2, tileSize / 2);
 	window->draw(sidebar);
 
-	saveUI->Render(255);
-	layerUI->Render(255);
 	if (selectedLayer < 2 || selectedLayer == 4)
 		pageUI->Render(255);
 
@@ -567,6 +610,7 @@ void Editor::Render()
 	texture = textures.GetTexture(7);
 	inactiveSprite.setTexture(*texture, true);
 	inactiveSprite.setColor(sf::Color::Black);
+
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 	{
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
@@ -579,7 +623,15 @@ void Editor::Render()
 		}
 	}
 
+	//window->draw(paletteOutline);
+
 	sidebarSelection->Render(255);
+
+	//window->draw(cover1);
+	//window->draw(cover2);
+
+	saveUI->Render(255);
+	layerUI->Render(255);
 
 	window->display();
 }
