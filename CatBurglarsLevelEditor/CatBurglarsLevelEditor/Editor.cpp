@@ -2,7 +2,7 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 7, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 8, sidebarTilesY2 = 12, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4;
 static bool load, focus;
 static string mapName;
 
@@ -301,7 +301,7 @@ void Editor::Update()
 			tileLayerTop[y][x]->Update(mousePosition);
 		}
 	}
-	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 	{
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
@@ -332,7 +332,7 @@ void Editor::Update()
 			selectedTileID = 0;
 			editorPage = 0;
 			sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
-			for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+			for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 			{
 				for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 				{
@@ -346,6 +346,8 @@ void Editor::Update()
 							else
 								state = true;
 						}
+						else if (y > 7)
+							state = false;
 						else if (y > 3)
 							state = true;
 						else
@@ -408,7 +410,7 @@ void Editor::Update()
 				editorPage = i;
 				selectedTileID = 0;
 				sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
-				for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+				for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 				{
 					for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 					{
@@ -424,6 +426,8 @@ void Editor::Update()
 									else
 										state = true;
 								}
+								else if (y > 7)
+									state = false;
 								else if (y > 3)
 									state = true;
 								else
@@ -455,12 +459,13 @@ void Editor::Update()
 							}
 							else
 							{
-								if (y < 6)
+								state = true;
+								/*if (y < 10)
 									state = true;
-								else if (y == 6 && x == 0)
+								else if (y == 10 && x == 0)
 									state = true;
 								else
-									state = false;
+									state = false;*/
 							}
 						}
 						sidebarTileButtons[y][x]->SetActive(state);
@@ -562,7 +567,7 @@ void Editor::Render()
 	texture = textures.GetTexture(7);
 	inactiveSprite.setTexture(*texture, true);
 	inactiveSprite.setColor(sf::Color::Black);
-	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 	{
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 		{
@@ -851,7 +856,7 @@ void Editor::UISpawn()
 	sidebarTiles2 = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY2 * tileSize / 2), 0, 0, 11, &textures);
 	sidebarObjects = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2), 0, 0, 8, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
-	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY; y++)
+	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY2; y++)
 	{
 		vector<Button*> row;
 		for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
@@ -866,6 +871,8 @@ void Editor::UISpawn()
 				else
 					state = true;
 			}
+			else if (y > 7)
+				state = false;
 			else if (y > 3)
 				state = true;
 			else

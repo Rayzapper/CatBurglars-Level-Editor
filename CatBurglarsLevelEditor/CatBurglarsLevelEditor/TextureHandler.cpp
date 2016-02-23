@@ -16,7 +16,7 @@ TextureHandler::~TextureHandler()
 void TextureHandler::Initialize()
 {
 	tileTexture.loadFromFile("Resources/TileMap.png");
-	tile2Texture.loadFromFile("Resources/Tilemap_2.png");
+	tile2Texture.loadFromFile("Resources/Tilemap_3.png");
 	catTexture.loadFromFile("Resources/cat.png");
 	selectorTexture.loadFromFile("Resources/Selector.png");
 	saveTexture.loadFromFile("Resources/Save.png");
