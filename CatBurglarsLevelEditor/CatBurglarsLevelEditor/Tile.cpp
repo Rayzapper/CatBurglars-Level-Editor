@@ -12,16 +12,16 @@ Tile::Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, i
 {
 	textureHandler = textures;
 	texture1 = textureHandler->GetTexture(0);
-	texture2 = textureHandler->GetTexture(11);
+	//texture2 = textureHandler->GetTexture(11);
 	currentPage = page;
-	if (currentPage == 0)
+	//if (currentPage == 0)
 		mSprite.setTexture(*texture1, true);
-	else if (currentPage == 1)
-		mSprite.setTexture(*texture2, true);
-	if (currentPage == 0)
+	/*else if (currentPage == 1)
+		mSprite.setTexture(*texture2, true);*/
+	//if (currentPage == 0)
 		mSprite.setTextureRect(sf::IntRect((ID % 3) * width, floor(ID / 3) * height, width, height));
-	else if (currentPage == 1)
-		mSprite.setTextureRect(sf::IntRect(((ID - 24) % 3) * width, floor((ID - 24) / 3) * height, width, height));
+	/*else if (currentPage == 1)
+		mSprite.setTextureRect(sf::IntRect(((ID - 24) % 3) * width, floor((ID - 24) / 3) * height, width, height));*/
 }
 
 Tile::~Tile()
@@ -39,16 +39,16 @@ void Tile::Update(sf::Vector2i mousePosition)
 			if (changeAllowed && mLayer == currentLayer)
 			{
 				mTileID = selectedID;
-				if (currentPage == 0)
-				{
+				//if (currentPage == 0)
+				//{
 					mSprite.setTexture(*texture1, true);
 					mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
-				}
-				else if (currentPage == 1)
+				//}
+				/*else if (currentPage == 1)
 				{
 					mSprite.setTexture(*texture2, true);
 					mSprite.setTextureRect(sf::IntRect(((mTileID - 24) % 3) * width, floor((mTileID - 24) / 3) * height, width, height));
-				}
+				}*/
 			}
 			mClicked = true;
 		}
