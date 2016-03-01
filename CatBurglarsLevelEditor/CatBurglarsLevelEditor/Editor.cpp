@@ -588,7 +588,8 @@ void Editor::StartConfiguration()
 	else
 	{
 		cout << "Please enter the name of the map. (Case sensitive)" << endl;
-		cin >> mapName;
+		cin >> input;
+		mapName = input;
 	}
 }
 
@@ -885,7 +886,7 @@ void Editor::UISpawn()
 
 void Editor::SaveMap()
 {
-	string input;
+	string input, name;
 	while (input != "n" && input != "y")
 	{
 		cout << "Would you like to save your map? y or n" << endl;
@@ -893,9 +894,30 @@ void Editor::SaveMap()
 	}
 	if (input == "y")
 	{
-		cout << "Please write the name of the map. (no spaces)" << endl;
-		cin >> input;
-		ofstream outputFile("Maps/" + input + ".txt");
+		bool ok = false;
+		while (!ok)
+		{
+			cout << "Please write the name of the map. (no spaces)" << endl;
+			cin >> name;
+			ifstream mapTest;
+			if (mapTest = ifstream("Maps/" + name + ".txt"))
+			{
+				cout << "There is already a map with that name." << endl;
+				input = "";
+				while (input != "n" && input != "y")
+				{
+					cout << "Do you want to overwrite it? y or n" << endl;
+					cin >> input;
+				}
+				if (input == "y")
+					ok = true;
+				else if (input == "n")
+					ok = false;
+			}
+			else
+				ok = true;
+		}
+		ofstream outputFile("Maps/" + name + ".txt");
 		outputFile << currentMapSizeX << endl;
 		outputFile << currentMapSizeY << endl;
 		for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
