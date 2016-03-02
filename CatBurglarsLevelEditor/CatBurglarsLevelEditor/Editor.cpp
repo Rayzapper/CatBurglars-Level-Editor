@@ -2,16 +2,17 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 20, sidebarWidth = 256, tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 20, sidebarWidth = 256,
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 4;
 static bool load, focus;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
 static TileLayer tileLayerBottom, tileLayerWalls, tileLayerTop;
-static vector<Object*> objectLayer1, objectLayer2, eventLayer;
+static vector<Object*> objectLayer1, objectLayer2, eventLayer, propLayer;
 
-static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarObjects, *saveUI, *layerUI, *pageUI;
+static UIElement *sidebar, *selector, *sidebarSelection, *sidebarTiles, *sidebarObjects, *sidebarProps, *saveUI, *layerUI, *pageUI, *propUI;
 static Button *saveButton;
 static vector<Button*> layerButtons, pageButtons;
 static vector<vector<Button*>> sidebarTileButtons;
@@ -803,6 +804,29 @@ void Editor::StartMapSpawn(string name)
 			object->SetChannel(channel);
 			eventLayer.push_back(object);
 		}
+
+		/*inputFile >> input;
+		objNum = stoi(input);
+		for (int i = 0; i < objNum; i++)
+		{
+			Object *object;
+			int xPos, yPos;
+			string facing;
+
+			inputFile >> input;
+			xPos = stoi(input);
+
+			inputFile >> input;
+			yPos = stoi(input);
+
+			inputFile >> input;
+			facing = input;
+
+			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), -1, -1, 18, "null", "null", -1, &textures);
+			object->SetFacing(facing);
+			propLayer.push_back(object);
+		}*/
 	}
 }
 
@@ -870,10 +894,20 @@ void Editor::UISpawn()
 	saveButton = new Button(sf::Vector2i(sidebarWidth / 2 - 100, 0), 100, 20);
 	layerUI = new UIElement(sf::Vector2i(sidebarWidth / 2 + 50, 10), 100, 20, 4, &textures);
 	pageUI = new UIElement(sf::Vector2i(10, 150), 20, 100, 12, &textures);
-	for (vector<Button*>::size_type i = 0; i < 5; i++)
+	for (vector<Button*>::size_type i = 0; i < 6; i++)
 	{
-		sf::Vector2i position(sidebarWidth / 2 + 20 * i, 0);
-		Button *button = new Button(position, 20, 20);
+		sf::Vector2i position;
+		Button *button;
+		if (i < 5)
+		{
+			position = sf::Vector2i(sidebarWidth / 2 + 20 * i, 0);
+			button = new Button(position, 20, 20);
+		}
+		else
+		{
+			position = sf::Vector2i(0, 25);
+			button = new Button(position, 20, 50);
+		}
 		layerButtons.push_back(button);
 	}
 	for (vector<Button*>::size_type i = 0; i < 2; i++)
@@ -995,6 +1029,14 @@ void Editor::SaveMap()
 			outputFile << object->GetMapPosition().y << endl;
 			outputFile << object->GetRange() << endl;
 			outputFile << object->GetChannel() << endl;
+		}
+		outputFile << propLayer.size() << endl;
+		for (vector<Object*>::size_type i = 0; i < propLayer.size(); i++)
+		{
+			Object *object = propLayer[i];
+			outputFile << object->GetMapPosition().x << endl;
+			outputFile << object->GetMapPosition().y << endl;
+			outputFile << object->GetFacing() << endl;
 		}
 		cout << "Done!" << endl;
 	}
