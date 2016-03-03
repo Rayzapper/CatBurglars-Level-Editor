@@ -1,7 +1,7 @@
 #include "TextureHandler.h"
 
 static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture,
-	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture, eventTexture, propsTexture;
+	pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture, eventTexture, propsTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -15,8 +15,7 @@ TextureHandler::~TextureHandler()
 
 void TextureHandler::Initialize()
 {
-	tileTexture.loadFromFile("Resources/TileMap.png");
-	tile2Texture.loadFromFile("Resources/Tilemap_3.png");
+	tileTexture.loadFromFile("Resources/Tilemap_4.png");
 	catTexture.loadFromFile("Resources/cat.png");
 	selectorTexture.loadFromFile("Resources/Selector.png");
 	saveTexture.loadFromFile("Resources/Save.png");
@@ -33,7 +32,7 @@ void TextureHandler::Initialize()
 	door2Texture.loadFromFile("Resources/Door2.png");
 	crate2Texture.loadFromFile("Resources/crate2.png");
 	eventTexture.loadFromFile("Resources/Event.png");
-	//propsTexture.loadFromFile("Resources/TileMap.png");
+	propsTexture.loadFromFile("Resources/tileset_props.png");
 
 	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image, crate2Image;
 
@@ -87,8 +86,8 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &doorTexture;
 	else if (ID == 10)
 		return &guardTexture;
-	else if (ID == 11)
-		return &tile2Texture;
+	/*else if (ID == 11)
+		return &deleteTexture;*/
 	else if (ID == 12)
 		return &pageTexture;
 	else if (ID == 13)
@@ -104,7 +103,7 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 	else if (ID == 18)
 		return &eventTexture;
 	else if (ID == 19)
-		return &objectsTexture;
+		return &propsTexture;
 	else
 		return &deleteTexture;
 }

@@ -1,4 +1,5 @@
-﻿  Editor.cpp
+﻿  TextureHandler.cpp
+  Editor.cpp
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(33): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(36): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
@@ -10,8 +11,9 @@ c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\c
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(157): warning C4305: '+=': truncation from 'double' to 'float'
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(169): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(170): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(543): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(544): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(545): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(573): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(546): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+c:\users\rasmus\documents\visual studio 2015\projects\catburglars-level-editor\catburglarsleveleditor\catburglarsleveleditor\editor.cpp(574): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Generating Code...
   CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Debug\CatBurglarsLevelEditor.exe

@@ -2,8 +2,8 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 20, sidebarWidth = 256,
-	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 4;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 23, sidebarWidth = 256,
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 8;
 static bool load, focus;
 static string mapName;
 
@@ -347,7 +347,6 @@ void Editor::Update()
 					selectedTileID -= sidebarTilesX * sidebarTilesY;
 					selectedTileID += 1000;
 				}
-				cout << selectedTileID << endl;
 			}
 		}
 	}
@@ -404,6 +403,8 @@ void Editor::Update()
 							else
 								state = false;
 						}
+						else if (y == 22 && x != 2)
+							state = false;
 						else if (y > 7)
 							state = true;
 						else if (y > 3)
