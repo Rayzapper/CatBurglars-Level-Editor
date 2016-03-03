@@ -1,0 +1,22 @@
+﻿  Editor.cpp
+Editor.cpp(33): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+Editor.cpp(36): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(76): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(98): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(131): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+Editor.cpp(147): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+Editor.cpp(151): warning C4305: '-=': truncation from 'double' to 'float'
+Editor.cpp(157): warning C4305: '+=': truncation from 'double' to 'float'
+Editor.cpp(169): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(170): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(547): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(548): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(549): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(577): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Generating code
+  18 of 763 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    26 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe

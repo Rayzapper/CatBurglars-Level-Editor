@@ -308,7 +308,10 @@ void Editor::Update()
 						object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), -1, -1, 18, "null", "null", -1, &textures);
 						object->SetRange(RangeSet(3));
 						if (object->GetRange() == 0)
+						{
 							object->SetChannel(ChannelSet(2));
+							object->SetButtonHold(ButtonHoldSet(2));
+						}
 
 						eventLayer.push_back(object);
 					}
@@ -654,7 +657,11 @@ void Editor::StartMapSpawn(string name)
 	else
 	{
 		ifstream inputFile("Maps/" + name + ".txt");
-		string input;
+		string input, edition = "";
+		inputFile >> edition;
+		inputFile = ifstream("Maps/" + name + ".txt");
+		if (edition == "2.6")
+			inputFile >> input;
 		inputFile >> input;
 		currentMapSizeX = stoi(input);
 		cout << "Map width: " << currentMapSizeX << endl;
@@ -793,7 +800,7 @@ void Editor::StartMapSpawn(string name)
 		for (int i = 0; i < objNum; i++)
 		{
 			Object *object;
-			int xPos, yPos, channel, range;
+			int xPos, yPos, channel, range, hold = -1;
 
 			inputFile >> input;
 			xPos = stoi(input);
@@ -807,8 +814,14 @@ void Editor::StartMapSpawn(string name)
 			inputFile >> input;
 			channel = stoi(input);
 
+			if (edition == "2.6")
+			{
+				inputFile >> input;
+				hold = stoi(input);
+			}
+
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
-			object = new Object(position, sf::IntRect(0, 0, 0, 0), -1, -1, 18, "null", "null", -1, &textures);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), -1, -1, 18, "null", "null", hold, &textures);
 			object->SetRange(range);
 			object->SetChannel(channel);
 			eventLayer.push_back(object);
@@ -940,6 +953,8 @@ void Editor::SaveMap()
 		}
 		ofstream outputFile("Maps/" + name + ".txt");
 
+		outputFile << "2.6" << endl;
+
 		outputFile << currentMapSizeX << endl;
 		outputFile << currentMapSizeY << endl;
 
@@ -1023,6 +1038,7 @@ void Editor::SaveMap()
 			outputFile << object->GetMapPosition().y << endl;
 			outputFile << object->GetRange() << endl;
 			outputFile << object->GetChannel() << endl;
+			outputFile << object->GetButtonHold() << endl;
 		}
 		cout << "Done!" << endl;
 	}
@@ -1083,8 +1099,10 @@ int Editor::ButtonHoldSet(int type)
 	{
 		if (type == 0)
 			cout << "Please enter the holdlength of the button. (in positive milliseconds)" << endl;
-		else
+		else if (type == 1)
 			cout << "Please enter the range of channels for the object. (positive)" << endl;
+		else
+			cout << "Please enter the range of dialog for the event. (positive)" << endl;
 		cin >> hold;
 	}
 	return hold;
@@ -1104,7 +1122,7 @@ int Editor::RangeSet(int type)
 		}
 	else
 	{
-		while (range < 0 || range > 1)
+		while (range < 0 || range > 2)
 		{
 			if (type == 2)
 			{
@@ -1113,7 +1131,7 @@ int Editor::RangeSet(int type)
 			}
 			else
 			{
-				cout << "Please enter whether the event is a dialog or a win. (0 for dialog, 1 for win)" << endl;
+				cout << "Please enter whether the event is a dialog, a win or a hint. (0 for dialog, 1 for win and 2 for hint)" << endl;
 				cin >> range;
 			}
 		}
