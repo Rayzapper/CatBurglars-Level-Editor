@@ -1,7 +1,7 @@
 #include "TextureHandler.h"
 
 static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture,
-	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture, eventTexture, propButtonTexture;
+	tile2Texture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture, eventTexture, propsTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -33,7 +33,7 @@ void TextureHandler::Initialize()
 	door2Texture.loadFromFile("Resources/Door2.png");
 	crate2Texture.loadFromFile("Resources/crate2.png");
 	eventTexture.loadFromFile("Resources/Event.png");
-	propButtonTexture.loadFromFile("Resources/Event.png");
+	//propsTexture.loadFromFile("Resources/TileMap.png");
 
 	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image, crate2Image;
 
@@ -104,7 +104,7 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 	else if (ID == 18)
 		return &eventTexture;
 	else if (ID == 19)
-		return &propButtonTexture;
+		return &objectsTexture;
 	else
 		return &deleteTexture;
 }
