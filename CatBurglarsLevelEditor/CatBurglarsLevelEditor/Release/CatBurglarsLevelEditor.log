@@ -14,9 +14,25 @@ Editor.cpp(547): warning C4244: 'argument': conversion from 'const int' to 'floa
 Editor.cpp(548): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 Editor.cpp(549): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 Editor.cpp(577): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Entity.cpp
+  Main.cpp
+  Object.cpp
+Object.cpp(53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Object.cpp(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  TextureHandler.cpp
+  Tile.cpp
+Tile.cpp(19): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(24): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(46): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(51): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Button.cpp
+  UIElement.cpp
+UIElement.cpp(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+UIElement.cpp(33): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating code
-  18 of 763 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+  95 of 763 functions (12.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    26 functions had inline decision re-evaluated but remain unchanged
+    33 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
