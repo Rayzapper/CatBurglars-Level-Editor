@@ -3,7 +3,7 @@
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
 static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 23, sidebarWidth = 256,
-	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 8;
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 10;
 static bool load, focus;
 static string mapName;
 
