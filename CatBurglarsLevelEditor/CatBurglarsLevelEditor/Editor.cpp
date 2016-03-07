@@ -789,7 +789,7 @@ void Editor::StartMapSpawn(string name)
 			textureID = LoadObjectTextureID(ID);
 
 			sf::Vector2i position(xPos * tileSize + sidebarWidth, yPos * tileSize);
-			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, script, facing, -1, &textures);
+			object = new Object(position, sf::IntRect(0, 0, 0, 0), layer, ID + 1, textureID, script, facing, hold, &textures);
 			object->SetChannel(channel);
 			object->SetRange(range);
 			objectLayer2.push_back(object);
