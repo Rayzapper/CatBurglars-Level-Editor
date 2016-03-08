@@ -3,7 +3,6 @@
 static const int width = 64, height = 64;
 static sf::Texture *texture;
 static sf::RenderWindow *window;
-static sf::Font *font;
 static TextureHandler *textureHandler;
 
 Object::Object(sf::Vector2i position, sf::IntRect rect, int layer, int ID, int textureID, string script, string facing, int hold, TextureHandler *textures)
@@ -52,20 +51,10 @@ void Object::Render(int alpha)
 		mSprite.setTextureRect(sf::IntRect(left, top, 64, 64));
 	mSprite.setPosition(mPosition.x, mPosition.y);
 	window->draw(mSprite);
-	if (mChannel >= 0)
-	{
-		sf::Text text;
-		text.setColor(sf::Color::White);
-		text.setFont(*font);
-		text.setString(to_string(mChannel));
-		text.setPosition(mPosition.x, mPosition.y);
-		window->draw(text);
-	}
 }
 
-void Object::Initialize(sf::RenderWindow *mainWindow, sf::Font *mainFont)
+void Object::Initialize(sf::RenderWindow *mainWindow)
 {
-	font = mainFont;
 	window = mainWindow;
 }
 

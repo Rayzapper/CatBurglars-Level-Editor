@@ -4,7 +4,7 @@ static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
 static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 23, sidebarWidth = 256,
 	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 10;
-static bool load, focus;
+static bool load, focus, displayToolTip;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
@@ -25,7 +25,9 @@ static sf::Vector2i mousePosition;
 
 static float zoomLevel = 1.0;
 
-sf::Font font;
+static sf::Font font;
+
+static sf::Text tooltip;
 
 Editor::Editor()
 {
@@ -51,9 +53,12 @@ Editor::~Editor()
 void Editor::Initialize()
 {
 	font.loadFromFile("Resources/calibri.ttf");
+	tooltip.setCharacterSize(12);
+	tooltip.setColor(sf::Color::Magenta);
+	tooltip.setFont(font);
 	UIElement::Initialize(window);
 	Tile::Initialize(window);
-	Object::Initialize(window, &font);
+	Object::Initialize(window);
 }
 
 void Editor::Run()
@@ -180,12 +185,16 @@ void Editor::Update()
 			tileLayerBottom[y][x]->Update(mousePosition);
 			if (tileLayerBottom[y][x]->GetMouseover())
 			{
+				if (selectedLayer == 2 || selectedLayer == 3)
+				{
+
+				}
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
 				if (selectedLayer > 1 && selectedLayer != 4 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
 				{
-					vector<Object*>* layer;
+					vector<Object*> *layer;
 
 					if (selectedLayer == 2)
 						layer = &objectLayer1;
@@ -660,7 +669,7 @@ void Editor::StartMapSpawn(string name)
 		string input, edition = "";
 		inputFile >> edition;
 		inputFile = ifstream("Maps/" + name + ".txt");
-		if (edition == "2.6")
+		if (edition == "2.6" || edition == "2.8")
 			inputFile >> input;
 		inputFile >> input;
 		currentMapSizeX = stoi(input);
@@ -814,7 +823,7 @@ void Editor::StartMapSpawn(string name)
 			inputFile >> input;
 			channel = stoi(input);
 
-			if (edition == "2.6")
+			if (edition == "2.6" || edition == "2.8")
 			{
 				inputFile >> input;
 				hold = stoi(input);
@@ -953,7 +962,7 @@ void Editor::SaveMap()
 		}
 		ofstream outputFile("Maps/" + name + ".txt");
 
-		outputFile << "2.6" << endl;
+		outputFile << "2.8" << endl;
 
 		outputFile << currentMapSizeX << endl;
 		outputFile << currentMapSizeY << endl;

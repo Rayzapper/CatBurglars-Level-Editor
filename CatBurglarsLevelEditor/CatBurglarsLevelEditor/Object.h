@@ -10,7 +10,7 @@ public:
 	~Object();
 	void Update(sf::Vector2i mousePosition);
 	void Render(int alpha);
-	static void Initialize(sf::RenderWindow *mainWindow, sf::Font *mainFont);
+	static void Initialize(sf::RenderWindow *mainWindow);
 	void SetChannel(int number);
 	void SetScript(string script);
 	void SetFacing(string facing);
