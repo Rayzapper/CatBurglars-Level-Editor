@@ -4,7 +4,7 @@ static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
 static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 23, sidebarWidth = 256,
 	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 10;
-static bool load, focus, displayToolTip;
+static bool load, focus, displayToolTip, toolTipAbove;
 static string mapName;
 
 typedef vector<Tile*> TileRow;
@@ -185,22 +185,38 @@ void Editor::Update()
 			tileLayerBottom[y][x]->Update(mousePosition);
 			if (tileLayerBottom[y][x]->GetMouseover())
 			{
-				if (selectedLayer == 2 || selectedLayer == 3)
-				{
-
-				}
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
-				if (selectedLayer > 1 && selectedLayer != 4 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
-				{
-					vector<Object*> *layer;
 
+				vector<Object*> *layer;
+
+				if (selectedLayer == 2 || selectedLayer == 3)
+				{
 					if (selectedLayer == 2)
 						layer = &objectLayer1;
 					else
 						layer = &objectLayer2;
 
+					if (mouseScreenPosition.y > 600)
+						toolTipAbove = true;
+					else
+						toolTipAbove = false;
+
+					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
+					{
+						int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
+						if (xPos == x && yPos == y)
+						{
+							displayToolTip = true;
+							tooltip.setPosition(sf::Vector2f(layer->at(i)->GetPosition()));
+							break;
+						}
+						displayToolTip = false;
+					}
+				}
+				if (selectedLayer > 1 && selectedLayer != 4 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
+				{
 					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
 					{
 						int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
