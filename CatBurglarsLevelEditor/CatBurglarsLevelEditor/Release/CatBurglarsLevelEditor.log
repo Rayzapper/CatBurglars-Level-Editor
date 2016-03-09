@@ -1,1 +1,25 @@
-﻿  CatBurglarsLevelEditor.vcxproj -> \\hsnas6\StudentHome\2015\a15axeka\Documents\GitHub\Level Editor MAIN\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
+﻿  Editor.cpp
+Editor.cpp(35): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+Editor.cpp(38): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(81): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(136): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+Editor.cpp(152): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+Editor.cpp(156): warning C4305: '-=': truncation from 'double' to 'float'
+Editor.cpp(162): warning C4305: '+=': truncation from 'double' to 'float'
+Editor.cpp(174): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(175): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Editor.cpp(556): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(557): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(558): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(586): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Main.cpp
+  Object.cpp
+Object.cpp(52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating code
+  731 of 758 functions (96.4%) were compiled, the rest were copied from previous compilation.
+    28 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  CatBurglarsLevelEditor.vcxproj -> \\hsnas6\StudentHome\2014\a14rasli\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
