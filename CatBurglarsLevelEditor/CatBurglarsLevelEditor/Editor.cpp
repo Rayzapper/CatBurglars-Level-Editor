@@ -498,9 +498,7 @@ void Editor::Update()
 					{
 						if (mapType == "Prison1")
 						{
-							if (y == 0 && x == 2)
-								state = false;
-							else if (y == 1 && x == 0)
+							if (y == 1 && x == 0)
 								state = false;
 							else if (y == 15 && x != 2)
 								state = false;
@@ -973,9 +971,7 @@ void Editor::UISpawn()
 			bool state = false;
 			if (mapType == "Prison1")
 			{
-				if (y == 0 && x == 2)
-					state = false;
-				else if (y == 1 && x == 0)
+				if (y == 1 && x == 0)
 					state = false;
 				else if (y == 15 && x != 2)
 					state = false;

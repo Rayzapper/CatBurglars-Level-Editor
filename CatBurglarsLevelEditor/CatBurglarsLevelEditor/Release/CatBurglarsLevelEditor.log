@@ -14,15 +14,15 @@ Editor.cpp(281): warning C4244: 'argument': conversion from 'unsigned int' to 'f
 Editor.cpp(283): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 Editor.cpp(428): warning C4018: '<': signed/unsigned mismatch
 Editor.cpp(470): warning C4018: '<': signed/unsigned mismatch
+Editor.cpp(622): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Editor.cpp(623): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 Editor.cpp(624): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-Editor.cpp(625): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-Editor.cpp(626): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-Editor.cpp(648): warning C4018: '<': signed/unsigned mismatch
-Editor.cpp(654): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-Editor.cpp(966): warning C4018: '<': signed/unsigned mismatch
+Editor.cpp(646): warning C4018: '<': signed/unsigned mismatch
+Editor.cpp(652): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+Editor.cpp(964): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  0 of 779 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  3 of 779 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    31 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   CatBurglarsLevelEditor.vcxproj -> \\hsnas6\StudentHome\2014\a14rasli\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
