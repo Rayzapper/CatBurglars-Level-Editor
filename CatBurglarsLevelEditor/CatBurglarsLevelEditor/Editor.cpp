@@ -2,10 +2,10 @@
 
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
-static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarTilesY = 23, sidebarWidth = 256,
-	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 10;
+static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarWidth = 256,
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 9;
 static bool load, focus, displayToolTip, toolTipAbove;
-static string mapName;
+static string mapName, mapType;
 
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileLayer;
@@ -17,7 +17,7 @@ static Button *saveButton;
 static vector<Button*> layerButtons, pageButtons;
 static vector<vector<Button*>> sidebarTileButtons;
 
-static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, editorPage = 0, sidebarScroll = 0;
+static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, sidebarScroll = 0, sidebarTilesY = 16;
 
 static TextureHandler textures;
 
@@ -53,7 +53,7 @@ Editor::~Editor()
 void Editor::Initialize()
 {
 	font.loadFromFile("Resources/calibri.ttf");
-	tooltip.setCharacterSize(12);
+	tooltip.setCharacterSize(14);
 	tooltip.setColor(sf::Color::Magenta);
 	tooltip.setFont(font);
 	UIElement::Initialize(window);
@@ -63,6 +63,10 @@ void Editor::Initialize()
 
 void Editor::Run()
 {
+	if (mapType == "Prison1")
+		sidebarTilesY = 16;
+	else if (mapType == "Museum")
+		sidebarTilesY = 15;
 	UISpawn();
 	while (window->isOpen())
 	{
@@ -178,6 +182,7 @@ void Editor::Update()
 
 	bool mouseOverSidebar = sidebar->GetMouseover();
 	Tile::IDChangeInfo(selectedTileID, mouseOverSidebar, selectedLayer);
+	displayToolTip = false;
 	for (TileLayer::size_type y = 0; y < tileLayerBottom.size(); y++)
 	{
 		for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
@@ -185,36 +190,98 @@ void Editor::Update()
 			tileLayerBottom[y][x]->Update(mousePosition);
 			if (tileLayerBottom[y][x]->GetMouseover())
 			{
+				displayToolTip = true;
+				tooltip.setString("X pos: " + to_string(x) + "\n" + "Y pos: " + to_string(y));
+
+				if (mouseScreenPosition.y > screenHeight - 200)
+					toolTipAbove = true;
+				else
+					toolTipAbove = false;
+
 				sf::Vector2i newSelectPos = tileLayerBottom[y][x]->GetPosition();
 				newSelectPos += Tile::GetSize() / 2;
 				selector->SetPosition(newSelectPos);
 
 				vector<Object*> *layer;
+				if (selectedLayer == 2)
+					layer = &objectLayer1;
+				else if (selectedLayer == 3)
+					layer = &objectLayer2;
+				else
+					layer = &eventLayer;
 
 				if (selectedLayer == 2 || selectedLayer == 3)
 				{
-					if (selectedLayer == 2)
-						layer = &objectLayer1;
-					else
-						layer = &objectLayer2;
-
-					if (mouseScreenPosition.y > 600)
-						toolTipAbove = true;
-					else
-						toolTipAbove = false;
-
 					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
 					{
 						int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
 						if (xPos == x && yPos == y)
 						{
-							displayToolTip = true;
-							tooltip.setPosition(sf::Vector2f(layer->at(i)->GetPosition()));
-							break;
+							string type;
+							if (layer->at(i)->GetID() == 1)
+								type = "Cat";
+							if (layer->at(i)->GetID() == 2)
+								type = "Button";
+							if (layer->at(i)->GetID() == 3)
+								type = "Crate";
+							if (layer->at(i)->GetID() == 4)
+								type = "Door";
+							if (layer->at(i)->GetID() == 5)
+								type = "Guard";
+							if (layer->at(i)->GetID() == 6)
+								type = "ToggleButton";
+							if (layer->at(i)->GetID() == 7)
+								type = "Camera";
+							if (layer->at(i)->GetID() == 8)
+								type = "Computer";
+							if (layer->at(i)->GetID() == 9)
+								type = "MultiDoor";
+							if (layer->at(i)->GetID() == 10)
+								type = "MetalCrate";
+							//script
+							tooltip.setString(tooltip.getString() + "\n" + "Script: " + layer->at(i)->GetScript());
+
+							//channel
+							tooltip.setString(tooltip.getString() + "\n" + "Channel: " + to_string(layer->at(i)->GetChannel()));
+
+							//range
+							tooltip.setString(tooltip.getString() + "\n" + "Range: " + to_string(layer->at(i)->GetRange()));
+
+							//hold
+							tooltip.setString(tooltip.getString() + "\n" + "Hold: " + to_string(layer->at(i)->GetButtonHold()));
 						}
-						displayToolTip = false;
 					}
 				}
+
+				if (selectedLayer != 2 && selectedLayer != 3)
+				{
+					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
+					{
+						int xPos = layer->at(i)->GetMapPosition().x, yPos = layer->at(i)->GetMapPosition().y;
+						if (xPos == x && yPos == y)
+						{
+							string type;
+							if (layer->at(i)->GetRange() == 0)
+								type = "Dialog";
+							if (layer->at(i)->GetRange() == 1)
+								type = "Win";
+							if (layer->at(i)->GetRange() == 2)
+								type = "Hint";
+							tooltip.setString(tooltip.getString() + "\nType = " + type);
+							if (type == "Dialog")
+							{
+								tooltip.setString(tooltip.getString() + "\nDialog ID = " + to_string(layer->at(i)->GetChannel()));
+								tooltip.setString(tooltip.getString() + "\nDialog Range = " + to_string(layer->at(i)->GetButtonHold()));
+							}
+						}
+					}
+				}
+
+				if (toolTipAbove)
+					tooltip.setPosition(sf::Vector2f(x * 64 + sidebarWidth, y * 64 - 64));
+				else
+					tooltip.setPosition(sf::Vector2f(x * 64 + sidebarWidth, y * 64 + 64));
+
 				if (selectedLayer > 1 && selectedLayer != 4 && tileLayerBottom[y][x]->GetClicked() && !mouseOverSidebar)
 				{
 					for (vector<Object*>::size_type i = 0; i < layer->size(); i++)
@@ -398,76 +465,59 @@ void Editor::Update()
 		{
 			selectedLayer = i;
 			selectedTileID = 0;
-			editorPage = 0;
 			sidebarScroll = 0;
 			sidebarSelection->SetPosition(sf::Vector2i(tileSize, tileSize));
 			for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY + sidebarPropsY; y++)
 			{
 				for (vector<Button*>::size_type x = 0; x < sidebarTilesX; x++)
 				{
-					bool state;
-					if (selectedLayer == 0)
+					bool state = false;
+					if (selectedLayer == 2)
 					{
-						if (y == 0)
-						{
-							if (x == 2)
-								state = false;
-							else
-								state = true;
-						}
-						else if (y > 7)
-							state = false;
-						else if (y > 3)
+						if (y == 0 && x != 1)
 							state = true;
-						else
-							state = false;
-					}
-					else if (selectedLayer == 1 || selectedLayer == 4)
-					{
-						if (y == 0)
-						{
-							if (x == 0)
-								state = true;
-							else
-								state = false;
-						}
-						else if (y == 22 && x != 2)
-							state = false;
-						else if (y > 7)
-							state = true;
-						else if (y > 3)
-							state = false;
-						else
-							state = true;
-					}
-					else if (selectedLayer == 2)
-					{
-						if (y > 2)
-							state = false;
 						else if (y == 2 && x == 0)
 							state = true;
-						else if (y == 0)
-						{
-							if (x == 1)
-								state = false;
-							else
-								state = true;
-						}
+						else
+							state = false;
+					}
+					else if (selectedLayer == 3)
+					{
+						if (y == 0 && x == 2)
+							state = false;
+						else if (y == 2 && x == 0)
+							state = false;
+						else if (y == 3 && x == 2)
+							state = false;
+						else if (y < 4)
+							state = true;
 						else
 							state = false;
 					}
 					else
 					{
-						if (y > 3)
-							state = false;
-						else if (y == 3 && x == 2)
-							state = false;
-						else if (y == 2 && x == 0)
-							state = false;
-						else if (y == 0 && x == 2)
-							state = false;
+						if (mapType == "Prison1")
+						{
+							if (y == 0 && x == 2)
+								state = false;
+							else if (y == 1 && x == 0)
+								state = false;
+							else if (y == 15 && x != 2)
+								state = false;
+							else
+								state = true;
+						}
 						else
-							state = true;
+						{
+							if (y == 0 && x == 2)
+								state = false;
+							else if (y == 1 && x == 0)
+								state = false;
+							else if (y == 14 && x != 0)
+								state = false;
+							else
+								state = true;
+						}
 					}
 					sidebarTileButtons[y][x]->SetActive(state);
 				}
@@ -530,6 +580,8 @@ void Editor::Render()
 		}
 	}
 	selector->Render(255);
+	if (displayToolTip)
+		window->draw(tooltip);
 
 	window->setView(*sidebarView);
 
@@ -634,6 +686,11 @@ void Editor::StartConfiguration()
 		cin >> currentMapSizeX;
 		cout << "Please enter map height." << endl;
 		cin >> currentMapSizeY;
+		while (mapType != "Prison1" && mapType != "Museum")
+		{
+			cout << "Please enter map type. (Prison1 or Museum)" << endl;
+			cin >> mapType;
+		}
 	}
 	else
 	{
@@ -652,7 +709,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 0);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 0, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -662,7 +719,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 1);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 1, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerWalls.push_back(row);
@@ -672,7 +729,7 @@ void Editor::StartMapSpawn(string name)
 			TileRow row;
 			for (int x = 0; x < currentMapSizeX; x++)
 			{
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 4);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), 0, &textures, 4, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerTop.push_back(row);
@@ -686,7 +743,21 @@ void Editor::StartMapSpawn(string name)
 		inputFile >> edition;
 		inputFile = ifstream("Maps/" + name + ".txt");
 		if (edition == "2.6" || edition == "2.8")
+		{
 			inputFile >> input;
+			if (edition == "2.8")
+			{
+				inputFile >> input;
+				mapType = input;
+			}
+		}
+
+		while (mapType != "Prison1" && mapType != "Museum")
+		{
+			cout << "Please enter map type. (Prison1 or Museum)" << endl;
+			cin >> mapType;
+		}
+
 		inputFile >> input;
 		currentMapSizeX = stoi(input);
 		cout << "Map width: " << currentMapSizeX << endl;
@@ -701,12 +772,12 @@ void Editor::StartMapSpawn(string name)
 			{
 				inputFile >> input;
 				int ID = stoi(input);
-				if (ID < 10)
-					cout << " " << ID;
-				else
-					cout << ID;
+				if (edition != "2.8")
+					if (ID > 2 && ID < 1000)
+						ID -= 21;
+				cout << ID;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 0);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 0, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerBottom.push_back(row);
@@ -719,12 +790,12 @@ void Editor::StartMapSpawn(string name)
 			{
 				inputFile >> input;
 				int ID = stoi(input);
-				if (ID < 10)
-					cout << " " << ID;
-				else
-					cout << ID;
+				if (edition != "2.8")
+					if (ID > 2 && ID < 1000)
+						ID -= 21;
+				cout << ID;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerWalls.push_back(row);
@@ -737,12 +808,12 @@ void Editor::StartMapSpawn(string name)
 			{
 				inputFile >> input;
 				int ID = stoi(input);
-				if (ID < 10)
-					cout << " " << ID;
-				else
-					cout << ID;
+				if (edition != "2.8")
+					if (ID > 2 && ID < 1000)
+						ID -= 21;
+				cout << ID;
 				cout << " ";
-				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 4);
+				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 4, &mapType);
 				row.push_back(tile);
 			}
 			tileLayerTop.push_back(row);
@@ -885,7 +956,10 @@ void Editor::UISpawn()
 	sf::Vector2i sidebarPosition(sidebarWidth / 2, screenHeight / 2);
 	selector = new UIElement(sf::Vector2i(sidebarWidth + tileSize / 2, tileSize / 2), tileSize, tileSize, 2, &textures);
 	sidebar = new UIElement(sidebarPosition, sidebarWidth, screenHeight, 0, &textures);
-	sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+	if (mapType == "Prison1")
+		sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+	else
+		sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 20, &textures);
 	sidebarProps = new UIElement(sf::Vector2i(sidebarPosition.x, (tileSize / 2 + sidebarTilesY * tileSize) + sidebarPropsY * tileSize / 2), 0, 0, 19, &textures);
 	sidebarObjects = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2), 0, 0, 8, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
@@ -896,20 +970,29 @@ void Editor::UISpawn()
 		{
 			sf::Vector2i position(tileSize * x + tileSize / 2, tileSize * y + tileSize / 2);
 			Button *button = new Button(position, tileSize, tileSize);
-			bool state;
-			if (y == 0)
+			bool state = false;
+			if (mapType == "Prison1")
 			{
-				if (x == 2)
+				if (y == 0 && x == 2)
+					state = false;
+				else if (y == 1 && x == 0)
+					state = false;
+				else if (y == 15 && x != 2)
 					state = false;
 				else
 					state = true;
 			}
-			else if (y > 7)
-				state = false;
-			else if (y > 3)
-				state = true;
 			else
-				state = false;
+			{
+				if (y == 0 && x == 2)
+					state = false;
+				else if (y == 1 && x == 0)
+					state = false;
+				else if (y == 14 && x != 0)
+					state = false;
+				else
+					state = true;
+			}
 			button->SetActive(state);
 			row.push_back(button);
 		}
@@ -979,6 +1062,8 @@ void Editor::SaveMap()
 		ofstream outputFile("Maps/" + name + ".txt");
 
 		outputFile << "2.8" << endl;
+
+		outputFile << mapType << endl;
 
 		outputFile << currentMapSizeX << endl;
 		outputFile << currentMapSizeY << endl;

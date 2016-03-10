@@ -3,24 +3,30 @@
 static const int width = 64, height = 64;
 static int selectedID = 0, currentLayer = 0;
 static bool changeAllowed = true;
-static sf::Texture *texture1, *texture2;
+static sf::Texture *texture1, *texture2, *textureProps;
 static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
+static string *mapType;
 
-Tile::Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer)
+Tile::Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, string *type)
 : Entity(position, sf::IntRect(position.x, position.y, width, height)), mTileID(ID), mLayer(layer)
 {
+	mapType = type;
 	textureHandler = textures;
 	texture1 = textureHandler->GetTexture(0);
-	texture2 = textureHandler->GetTexture(19);
+	texture2 = textureHandler->GetTexture(20);
+	textureProps = textureHandler->GetTexture(19);
 	if (ID < 1000)
 	{
-		mSprite.setTexture(*texture1, true);
+		if (*mapType == "Prison1")
+			mSprite.setTexture(*texture1, true);
+		else if (*mapType == "Museum")
+			mSprite.setTexture(*texture2, true);
 		mSprite.setTextureRect(sf::IntRect((ID % 3) * width, floor(ID / 3) * height, width, height));
 	}
 	else
 	{
-		mSprite.setTexture(*texture2, true);
+		mSprite.setTexture(*textureProps, true);
 		mSprite.setTextureRect(sf::IntRect(((ID - 1000) % 3) * width, floor((ID - 1000) / 3) * height, width, height));
 	}
 }
@@ -42,12 +48,15 @@ void Tile::Update(sf::Vector2i mousePosition)
 				mTileID = selectedID;
 				if (mTileID < 1000)
 				{
-					mSprite.setTexture(*texture1, true);
+					if (*mapType == "Prison1")
+						mSprite.setTexture(*texture1, true);
+					else if (*mapType == "Museum")
+						mSprite.setTexture(*texture2, true);
 					mSprite.setTextureRect(sf::IntRect((mTileID % 3) * width, floor(mTileID / 3) * height, width, height));
 				}
 				else
 				{
-					mSprite.setTexture(*texture2, true);
+					mSprite.setTexture(*textureProps, true);
 					mSprite.setTextureRect(sf::IntRect(((mTileID - 1000) % 3) * width, floor((mTileID - 1000) / 3) * height, width, height));
 				}
 			}

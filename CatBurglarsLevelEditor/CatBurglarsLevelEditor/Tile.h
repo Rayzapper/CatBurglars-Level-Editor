@@ -6,7 +6,7 @@
 class Tile : public Entity
 {
 public:
-	Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer);
+	Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, string *type);
 	~Tile();
 	void Update(sf::Vector2i mousePosition);
 	void Render(int alpha);
