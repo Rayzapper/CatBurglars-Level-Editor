@@ -263,16 +263,22 @@ void Editor::Update()
 							string type;
 							if (layer->at(i)->GetRange() == 0)
 								type = "Dialog";
-							if (layer->at(i)->GetRange() == 1)
+							else if (layer->at(i)->GetRange() == 1)
 								type = "Win";
-							if (layer->at(i)->GetRange() == 2)
+							else if (layer->at(i)->GetRange() == 2)
 								type = "Hint";
+							else if (layer->at(i)->GetRange() == 3)
+								type = "Checkpoint";
 							tooltip.setString(tooltip.getString() + "\nType = " + type);
 							if (type == "Dialog")
 							{
 								tooltip.setString(tooltip.getString() + "\nDialog ID = " + to_string(layer->at(i)->GetChannel()));
 								tooltip.setString(tooltip.getString() + "\nDialog Range = " + to_string(layer->at(i)->GetButtonHold()));
 							}
+							else if (type == "Hint")
+								tooltip.setString(tooltip.getString() + "\nHint ID = " + to_string(layer->at(i)->GetChannel()));
+							else if (type == "Checkpoint")
+								tooltip.setString(tooltip.getString() + "\nCheckpoint Nr: " + to_string(layer->at(i)->GetChannel()));
 						}
 					}
 				}
@@ -404,6 +410,10 @@ void Editor::Update()
 							object->SetChannel(ChannelSet(2));
 							object->SetButtonHold(ButtonHoldSet(2));
 						}
+						else if (object->GetRange() == 2)
+							object->SetChannel(ChannelSet(3));
+						else if (object->GetRange() == 3)
+							object->SetChannel(ChannelSet(4));
 
 						eventLayer.push_back(object);
 					}
@@ -1161,9 +1171,19 @@ int Editor::ChannelSet(int type)
 				cout << "Please enter the channel number you wish to use. (positive)" << endl;
 				cin >> channel;
 			}
-			else
+			else if (type == 2)
 			{
 				cout << "Please enter the dialog ID number you wish to use." << endl;
+				cin >> channel;
+			}
+			else if (type == 3)
+			{
+				cout << "Please enter the Hint ID number you wish to use." << endl;
+				cin >> channel;
+			}
+			else
+			{
+				cout << "Please enter the Checkpoint number you wish to use." << endl;
 				cin >> channel;
 			}
 		}
@@ -1228,7 +1248,7 @@ int Editor::RangeSet(int type)
 		}
 	else
 	{
-		while (range < 0 || range > 2)
+		while (range < 0 || range > 3)
 		{
 			if (type == 2)
 			{
@@ -1237,7 +1257,7 @@ int Editor::RangeSet(int type)
 			}
 			else
 			{
-				cout << "Please enter whether the event is a dialog, a win or a hint. (0 for dialog, 1 for win and 2 for hint)" << endl;
+				cout << "Please enter whether the event is a dialog, a win, a hint or a checkpoint. (0 for dialog, 1 for win, 2 for hint and 3 for checkpoint)" << endl;
 				cin >> range;
 			}
 		}
