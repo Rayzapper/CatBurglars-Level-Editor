@@ -391,6 +391,8 @@ void Editor::Update()
 								object->SetChannel(ChannelSet(0));
 								object->SetButtonHold(ButtonHoldSet(1));
 							}
+							else
+								object->SetButtonHold(ButtonHoldSet(3));
 						}
 						layer->push_back(object);
 					}
@@ -1262,8 +1264,10 @@ int Editor::ButtonHoldSet(int type)
 			cout << "Please enter the holdlength of the button. (in positive milliseconds)" << endl;
 		else if (type == 1)
 			cout << "Please enter the range of channels for the object. (positive)" << endl;
-		else
+		else if (type == 2)
 			cout << "Please enter the range of dialog for the event. (positive)" << endl;
+		else
+			cout << "Please enter the interval duration of the laser. (in positive milliseconds)" << endl;
 		cin >> hold;
 	}
 	return hold;
