@@ -1,7 +1,8 @@
 #include "TextureHandler.h"
 
-static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture, objectsTexture, doorTexture, guardTexture,
-	pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture, eventTexture, propsTexture, tileTexture2;
+static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture,
+	objectsTexture, doorTexture, guardTexture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture,
+	eventTexture, propsTexture, tile2Texture, props2Texture, laserTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -33,9 +34,12 @@ void TextureHandler::Initialize()
 	crate2Texture.loadFromFile("Resources/crate2.png");
 	eventTexture.loadFromFile("Resources/Event.png");
 	propsTexture.loadFromFile("Resources/tileset_props.png");
-	tileTexture2.loadFromFile("Resources/Tilemap_Museum.png");
+	tile2Texture.loadFromFile("Resources/Tilemap_Museum.png");
+	props2Texture.loadFromFile("Resources/tilemap_museum_props.png");
+	laserTexture.loadFromFile("Resources/Laser.png");
 
-	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image, crate2Image;
+	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image,
+		crate2Image, laserImage;
 
 	deleteImage.loadFromFile("Resources/Delete.png");
 	catImage.loadFromFile("Resources/cat.png");
@@ -48,6 +52,7 @@ void TextureHandler::Initialize()
 	computerImage.loadFromFile("Resources/ComputerIcon.png");
 	door2Image.loadFromFile("Resources/Door2Icon.png");
 	crate2Image.loadFromFile("Resources/crate2.png");
+	laserImage.loadFromFile("Resources/LaserIcon.png");
 
 	objectsTexture.create(192, 256);
 	objectsTexture.update(deleteImage, 0, 0);
@@ -61,6 +66,7 @@ void TextureHandler::Initialize()
 	objectsTexture.update(computerImage, 128, 128);
 	objectsTexture.update(door2Image, 0, 192);
 	objectsTexture.update(crate2Image, 64, 192);
+	objectsTexture.update(laserImage, 128, 192);
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -106,7 +112,11 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 	else if (ID == 19)
 		return &propsTexture;
 	else if (ID == 20)
-		return &tileTexture2;
+		return &tile2Texture;
+	else if (ID == 21)
+		return &props2Texture;
+	else if (ID == 22)
+		return &laserTexture;
 	else
 		return &deleteTexture;
 }

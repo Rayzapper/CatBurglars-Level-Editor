@@ -3,7 +3,7 @@
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
 static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarWidth = 256,
-	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3, sidebarPropsY = 9;
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3;
 static bool load, focus, displayToolTip, toolTipAbove;
 static string mapName, mapType;
 
@@ -17,7 +17,7 @@ static Button *saveButton;
 static vector<Button*> layerButtons, pageButtons;
 static vector<vector<Button*>> sidebarTileButtons;
 
-static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, sidebarScroll = 0, sidebarTilesY = 16;
+static int selectedLayer = 0, selectedTileID = 0, currentMapSizeX, currentMapSizeY, sidebarScroll = 0, sidebarTilesY = 16, sidebarPropsY = 9;
 
 static TextureHandler textures;
 
@@ -64,9 +64,15 @@ void Editor::Initialize()
 void Editor::Run()
 {
 	if (mapType == "Prison1")
+	{
 		sidebarTilesY = 16;
+		sidebarPropsY = 9;
+	}
 	else if (mapType == "Museum")
+	{
 		sidebarTilesY = 15;
+		sidebarPropsY = 19;
+	}
 	UISpawn();
 	while (window->isOpen())
 	{
@@ -332,7 +338,7 @@ void Editor::Update()
 						{
 							//Guard
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 10, "null", "null", -1, &textures);
-							object->SetScript(ScriptSet());
+							object->SetScript(ScriptSet(0));
 						}
 						if (selectedTileID == 6)
 						{
@@ -372,6 +378,19 @@ void Editor::Update()
 						{
 							//MetalCrate
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 17, "null", "null", -1, &textures);
+						}
+						if (selectedTileID == 11)
+						{
+							//Laser
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 22, "null", "null", -1, &textures);
+							object->SetScript(ScriptSet(1));
+							object->SetFacing(FacingSet());
+							object->SetRange(RangeSet(0));
+							if (object->GetScript() == "toggle")
+							{
+								object->SetChannel(ChannelSet(0));
+								object->SetButtonHold(ButtonHoldSet(1));
+							}
 						}
 						layer->push_back(object);
 					}
@@ -496,8 +515,6 @@ void Editor::Update()
 						if (y == 0 && x == 2)
 							state = false;
 						else if (y == 2 && x == 0)
-							state = false;
-						else if (y == 3 && x == 2)
 							state = false;
 						else if (y < 4)
 							state = true;
@@ -965,10 +982,15 @@ void Editor::UISpawn()
 	selector = new UIElement(sf::Vector2i(sidebarWidth + tileSize / 2, tileSize / 2), tileSize, tileSize, 2, &textures);
 	sidebar = new UIElement(sidebarPosition, sidebarWidth, screenHeight, 0, &textures);
 	if (mapType == "Prison1")
+	{
 		sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 0, &textures);
+		sidebarProps = new UIElement(sf::Vector2i(sidebarPosition.x, (tileSize / 2 + sidebarTilesY * tileSize) + sidebarPropsY * tileSize / 2), 0, 0, 19, &textures);
+	}
 	else
+	{
 		sidebarTiles = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarTilesY * tileSize / 2), 0, 0, 20, &textures);
-	sidebarProps = new UIElement(sf::Vector2i(sidebarPosition.x, (tileSize / 2 + sidebarTilesY * tileSize) + sidebarPropsY * tileSize / 2), 0, 0, 19, &textures);
+		sidebarProps = new UIElement(sf::Vector2i(sidebarPosition.x, (tileSize / 2 + sidebarTilesY * tileSize) + sidebarPropsY * tileSize / 2), 0, 0, 21, &textures);
+	}
 	sidebarObjects = new UIElement(sf::Vector2i(sidebarPosition.x, tileSize / 2 + sidebarObjectsY * tileSize / 2), 0, 0, 8, &textures);
 	sidebarSelection = new UIElement(sf::Vector2i(tileSize, tileSize), tileSize, tileSize, 2, &textures);
 	for (vector<vector<Button*>>::size_type y = 0; y < sidebarTilesY + sidebarPropsY; y++)
@@ -1196,13 +1218,26 @@ int Editor::ChannelSet(int type)
 	return channel;
 }
 
-string Editor::ScriptSet()
+string Editor::ScriptSet(int type)
 {
 	string script = "null";
-	while (script == "null")
+	if (type == 0)
+		while (script == "null")
+		{
+			cout << "Please enter the script name you wish to use. (Do not enter null!)" << endl;
+			cin >> script;
+		}
+	else
 	{
-		cout << "Please enter the script name you wish to use. (Do not enter null!)" << endl;
-		cin >> script;
+		while (script != "0" && script != "1")
+		{
+			cout << "Please enter the type of laser you want. (0 for toggle, 1 for interval)" << endl;
+			cin >> script;
+		}
+		if (script == "0")
+			script = "toggle";
+		if (script == "1")
+			script = "interval";
 	}
 	return script;
 }

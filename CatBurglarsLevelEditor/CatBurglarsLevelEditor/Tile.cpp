@@ -3,7 +3,7 @@
 static const int width = 64, height = 64;
 static int selectedID = 0, currentLayer = 0;
 static bool changeAllowed = true;
-static sf::Texture *texture1, *texture2, *textureProps;
+static sf::Texture *texture1, *texture2, *textureProps, *textureProps2;
 static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
 static string *mapType;
@@ -16,6 +16,7 @@ Tile::Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, s
 	texture1 = textureHandler->GetTexture(0);
 	texture2 = textureHandler->GetTexture(20);
 	textureProps = textureHandler->GetTexture(19);
+	textureProps2 = textureHandler->GetTexture(21);
 	if (ID < 1000)
 	{
 		if (*mapType == "Prison1")
@@ -26,7 +27,10 @@ Tile::Tile(sf::Vector2i position, int ID, TextureHandler *textures, int layer, s
 	}
 	else
 	{
-		mSprite.setTexture(*textureProps, true);
+		if (*mapType == "Prison1")
+			mSprite.setTexture(*textureProps, true);
+		else
+			mSprite.setTexture(*textureProps2, true);
 		mSprite.setTextureRect(sf::IntRect(((ID - 1000) % 3) * width, floor((ID - 1000) / 3) * height, width, height));
 	}
 }
@@ -56,7 +60,10 @@ void Tile::Update(sf::Vector2i mousePosition)
 				}
 				else
 				{
-					mSprite.setTexture(*textureProps, true);
+					if (*mapType == "Prison1")
+						mSprite.setTexture(*textureProps, true);
+					else
+						mSprite.setTexture(*textureProps2, true);
 					mSprite.setTextureRect(sf::IntRect(((mTileID - 1000) % 3) * width, floor((mTileID - 1000) / 3) * height, width, height));
 				}
 			}
