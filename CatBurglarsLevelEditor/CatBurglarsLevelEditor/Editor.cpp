@@ -516,8 +516,6 @@ void Editor::Update()
 							state = true;
 						else if (y == 2 && x == 0)
 							state = true;
-						else if (y == 4 && x == 0)
-							state = true;
 						else
 							state = false;
 					}
@@ -527,6 +525,8 @@ void Editor::Update()
 							state = false;
 						else if (y == 2 && x == 0)
 							state = false;
+						else if (y == 4 && x == 0)
+							state = true;
 						else if (y < 4)
 							state = true;
 						else
