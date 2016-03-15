@@ -6,7 +6,13 @@ static sf::RenderWindow *window;
 static TextureHandler *textureHandler;
 
 Object::Object(sf::Vector2i position, sf::IntRect rect, int layer, int ID, int textureID, string script, string facing, int hold, TextureHandler *textures)
-: Entity(position, rect), mLayer(layer), mObjectID(ID), mTilePosition((position.x - 256) / width, position.y / height), mScript(script), mFacing(facing), mHoldlength(hold)
+: Entity(position, rect),
+mLayer(layer),
+mObjectID(ID),
+mTilePosition((position.x - 256) / width, position.y / height),
+mScript(script),
+mFacing(facing),
+mHoldlength(hold)
 {
 	textureHandler = textures;
 	texture = textureHandler->GetTexture(textureID);
@@ -27,29 +33,53 @@ void Object::Render(int alpha)
 {
 	mSprite.setColor(sf::Color(255, 255, 255, alpha));
 	int left = 0, top = 0;
-	if (mFacing == "S")
+	if (mObjectID != 12)
 	{
-		left = 0;
-		top = 0;
-	}
-	else if (mFacing == "W")
-	{
-		left = 64;
-		top = 0;
-	}
-	else if (mFacing == "E")
-	{
-		left = 0;
-		top = 64;
+		if (mFacing == "S")
+		{
+			left = 0;
+			top = 0;
+		}
+		else if (mFacing == "W")
+		{
+			left = 64;
+			top = 0;
+		}
+		else if (mFacing == "E")
+		{
+			left = 0;
+			top = 64;
+		}
+		else
+		{
+			left = 64;
+			top = 64;
+		}
+		if (mFacing != "null")
+			mSprite.setTextureRect(sf::IntRect(left, top, 64, 64));
+		mSprite.setPosition(mPosition.x, mPosition.y);
 	}
 	else
 	{
-		left = 64;
-		top = 64;
+		int height = 64;
+		top = 0;
+		if (mFacing == "W")
+		{
+			left = 128;
+		}
+		else if (mFacing == "E")
+		{
+			left = 0;
+		}
+		else
+		{
+			left = 64;
+			height = 128;
+			mSprite.setOrigin(0, 64);
+		}
+		mSprite.setTextureRect(sf::IntRect(left, top, 64, height));
+		mSprite.setPosition(mPosition.x, mPosition.y);
 	}
-	if (mFacing != "null")
-		mSprite.setTextureRect(sf::IntRect(left, top, 64, 64));
-	mSprite.setPosition(mPosition.x, mPosition.y);
 	window->draw(mSprite);
 }
 

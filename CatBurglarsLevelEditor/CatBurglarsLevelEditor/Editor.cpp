@@ -3,7 +3,7 @@
 static sf::RenderWindow *window;
 static sf::View *mainView, *sidebarView;
 static const int screenWidth = 1056, screenHeight = 800, sidebarTilesX = 3, sidebarWidth = 256,
-	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 4, sidebarPropsX = 3;
+	tileSize = 64, sidebarObjectsX = 3, sidebarObjectsY = 5, sidebarPropsX = 3;
 static bool load, focus, displayToolTip, toolTipAbove;
 static string mapName, mapType;
 
@@ -332,7 +332,7 @@ void Editor::Update()
 							//Door
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 9, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet(0));
-							object->SetFacing(FacingSet());
+							object->SetFacing(FacingSet(0));
 						}
 						if (selectedTileID == 5)
 						{
@@ -352,7 +352,7 @@ void Editor::Update()
 							//Camera
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 14, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet(0));
-							object->SetFacing(FacingSet());
+							object->SetFacing(FacingSet(0));
 							object->SetRange(RangeSet(0));
 							object->SetButtonHold(ButtonHoldSet(1));
 						}
@@ -364,14 +364,14 @@ void Editor::Update()
 							object->SetRange(RangeSet(2));
 							if (object->GetRange() == 0)
 								object->SetButtonHold(ButtonHoldSet(0));
-							object->SetFacing(FacingSet());
+							object->SetFacing(FacingSet(1));
 						}
 						if (selectedTileID == 9)
 						{
 							//MultiDoor
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 16, "null", "null", -1, &textures);
 							object->SetChannel(ChannelSet(0));
-							object->SetFacing(FacingSet());
+							object->SetFacing(FacingSet(0));
 							object->SetRange(RangeSet(1));
 						}
 						if (selectedTileID == 10)
@@ -384,7 +384,7 @@ void Editor::Update()
 							//Laser
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 22, "null", "null", -1, &textures);
 							object->SetScript(ScriptSet(1));
-							object->SetFacing(FacingSet());
+							object->SetFacing(FacingSet(0));
 							object->SetRange(RangeSet(0));
 							if (object->GetScript() == "toggle")
 							{
@@ -393,6 +393,13 @@ void Editor::Update()
 							}
 							else
 								object->SetButtonHold(ButtonHoldSet(3));
+						}
+						if (selectedTileID == 12)
+						{
+							//Vent
+							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 23, "null", "null", -1, &textures);
+							object->SetChannel(ChannelSet(0));
+							object->SetFacing(FacingSet(1));
 						}
 						layer->push_back(object);
 					}
@@ -508,6 +515,8 @@ void Editor::Update()
 						if (y == 0 && x != 1)
 							state = true;
 						else if (y == 2 && x == 0)
+							state = true;
+						else if (y == 4 && x == 0)
 							state = true;
 						else
 							state = false;
@@ -975,6 +984,10 @@ int Editor::LoadObjectTextureID(int ID)
 		textureID = 16;
 	else if (ID == 9)
 		textureID = 17;
+	else if (ID == 10)
+		textureID = 22;
+	else if (ID == 11)
+		textureID = 23;
 	return textureID;
 }
 
@@ -1244,13 +1257,22 @@ string Editor::ScriptSet(int type)
 	return script;
 }
 
-string Editor::FacingSet()
+string Editor::FacingSet(int type)
 {
 	string facing = "null";
-	while (facing != "N" && facing != "W" && facing != "S" && facing != "E")
+	if (type == 0)
+		while (facing != "N" && facing != "W" && facing != "S" && facing != "E")
+		{
+			cout << "Please enter the direction you want the object to face. (N, W, S or E)" << endl;
+			cin >> facing;
+		}
+	else
 	{
-		cout << "Please enter the direction you want the object to face. (N, W, S or E)" << endl;
-		cin >> facing;
+		while (facing != "W" && facing != "S" && facing != "E")
+		{
+			cout << "Please enter the direction you want the object to face. (W, S or E)" << endl;
+			cin >> facing;
+		}
 	}
 	return facing;
 }
