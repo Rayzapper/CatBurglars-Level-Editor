@@ -812,7 +812,7 @@ void Editor::StartMapSpawn(string name)
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
 				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 16;
+					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 0, &mapType);
@@ -832,7 +832,7 @@ void Editor::StartMapSpawn(string name)
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
 				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 16;
+					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1, &mapType);
@@ -852,7 +852,7 @@ void Editor::StartMapSpawn(string name)
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
 				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 16;
+					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 4, &mapType);
@@ -1123,7 +1123,7 @@ void Editor::SaveMap()
 			{
 				int ID = tileLayerBottom[y][x]->GetID();
 				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 16;
+					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
@@ -1138,7 +1138,7 @@ void Editor::SaveMap()
 			{
 				int ID = tileLayerWalls[y][x]->GetID();
 				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 16;
+					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
@@ -1153,7 +1153,7 @@ void Editor::SaveMap()
 			{
 				int ID = tileLayerTop[y][x]->GetID();
 				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 16;
+					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else

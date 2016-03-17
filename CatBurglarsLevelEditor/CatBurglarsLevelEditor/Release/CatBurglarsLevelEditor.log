@@ -1,4 +1,5 @@
-﻿  Editor.cpp
+﻿  Button.cpp
+  Editor.cpp
 Editor.cpp(35): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 Editor.cpp(37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 Editor.cpp(38): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
@@ -19,10 +20,25 @@ Editor.cpp(661): warning C4244: 'argument': conversion from 'const int' to 'floa
 Editor.cpp(662): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 Editor.cpp(684): warning C4018: '<': signed/unsigned mismatch
 Editor.cpp(690): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-Editor.cpp(1011): warning C4018: '<': signed/unsigned mismatch
+Editor.cpp(1017): warning C4018: '<': signed/unsigned mismatch
+  Entity.cpp
+  Main.cpp
+  Object.cpp
+Object.cpp(60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Object.cpp(81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  TextureHandler.cpp
+  Tile.cpp
+Tile.cpp(26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(34): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(59): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(67): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Tile.cpp(89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  UIElement.cpp
+UIElement.cpp(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+UIElement.cpp(33): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating code
-  2 of 785 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    28 functions had inline decision re-evaluated but remain unchanged
+  779 of 785 functions (99.2%) were compiled, the rest were copied from previous compilation.
+    75 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  CatBurglarsLevelEditor.vcxproj -> \\hsnas6\StudentHome\2014\a14rasli\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
+  CatBurglarsLevelEditor.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\CatBurglars-Level-Editor\CatBurglarsLevelEditor\Release\CatBurglarsLevelEditor.exe
