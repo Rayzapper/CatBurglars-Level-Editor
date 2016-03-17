@@ -27,7 +27,7 @@ private:
 	void SaveMap();
 	int ChannelSet(int type);
 	string ScriptSet(int type);
-	string FacingSet();
+	string FacingSet(int type);
 	int ButtonHoldSet(int type);
 	int RangeSet(int type);
 };

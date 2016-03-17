@@ -2,7 +2,7 @@
 
 static sf::Texture tileTexture, catTexture, selectorTexture, saveTexture, layerTexture, buttonTexture, crateTexture, deleteTexture,
 	objectsTexture, doorTexture, guardTexture, pageTexture, button2Texture, cameraTexture, computerTexture, door2Texture, crate2Texture,
-	eventTexture, propsTexture, tile2Texture, props2Texture, laserTexture;
+	eventTexture, propsTexture, tile2Texture, props2Texture, laserTexture, ventTexture;
 
 TextureHandler::TextureHandler()
 {
@@ -37,9 +37,10 @@ void TextureHandler::Initialize()
 	tile2Texture.loadFromFile("Resources/Tilemap_Museum.png");
 	props2Texture.loadFromFile("Resources/tilemap_museum_props.png");
 	laserTexture.loadFromFile("Resources/Laser.png");
+	ventTexture.loadFromFile("Resources/Vent.png");
 
 	sf::Image deleteImage, catImage, buttonImage, crateImage, doorImage, guardImage, button2Image, cameraImage, computerImage, door2Image,
-		crate2Image, laserImage;
+		crate2Image, laserImage, ventImage;
 
 	deleteImage.loadFromFile("Resources/Delete.png");
 	catImage.loadFromFile("Resources/cat.png");
@@ -53,8 +54,9 @@ void TextureHandler::Initialize()
 	door2Image.loadFromFile("Resources/Door2Icon.png");
 	crate2Image.loadFromFile("Resources/crate2.png");
 	laserImage.loadFromFile("Resources/LaserIcon.png");
+	ventImage.loadFromFile("Resources/VentIcon.png");
 
-	objectsTexture.create(192, 256);
+	objectsTexture.create(192, 320);
 	objectsTexture.update(deleteImage, 0, 0);
 	objectsTexture.update(catImage, 64, 0);
 	objectsTexture.update(buttonImage, 128, 0);
@@ -67,6 +69,7 @@ void TextureHandler::Initialize()
 	objectsTexture.update(door2Image, 0, 192);
 	objectsTexture.update(crate2Image, 64, 192);
 	objectsTexture.update(laserImage, 128, 192);
+	objectsTexture.update(ventImage, 0, 256);
 }
 
 sf::Texture* TextureHandler::GetTexture(int ID)
@@ -117,6 +120,8 @@ sf::Texture* TextureHandler::GetTexture(int ID)
 		return &props2Texture;
 	else if (ID == 22)
 		return &laserTexture;
+	else if (ID == 23)
+		return &ventTexture;
 	else
 		return &deleteTexture;
 }
