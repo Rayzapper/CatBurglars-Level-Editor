@@ -778,7 +778,7 @@ void Editor::StartMapSpawn(string name)
 		string input, edition = "";
 		inputFile >> edition;
 		inputFile = ifstream("Maps/" + name + ".txt");
-		if (edition == "2.6" || edition == "2.8" ||edition == "3.3")
+		if (edition == "2.6" || edition == "2.8" || edition == "3.3")
 		{
 			inputFile >> input;
 			if (edition == "2.8" || edition == "3.3")
@@ -811,8 +811,6 @@ void Editor::StartMapSpawn(string name)
 				if (edition != "2.8" && edition != "3.3")
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
-				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 0, &mapType);
@@ -831,8 +829,6 @@ void Editor::StartMapSpawn(string name)
 				if (edition != "2.8" && edition != "3.3")
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
-				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 1, &mapType);
@@ -851,8 +847,6 @@ void Editor::StartMapSpawn(string name)
 				if (edition != "2.8" && edition != "3.3")
 					if (ID > 2 && ID < 1000)
 						ID -= 21;
-				if (mapType == "Museum" && ID != 0 && ID < 1000 && edition == "3.3")
-					ID -= 3 * 20;
 				cout << ID;
 				cout << " ";
 				Tile *tile = new Tile(sf::Vector2i(sidebarWidth + x * tileSize, y * tileSize), ID, &textures, 4, &mapType);
@@ -1122,8 +1116,6 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerBottom[y].size(); x++)
 			{
 				int ID = tileLayerBottom[y][x]->GetID();
-				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
@@ -1137,8 +1129,6 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerWalls[y].size(); x++)
 			{
 				int ID = tileLayerWalls[y][x]->GetID();
-				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
@@ -1152,8 +1142,6 @@ void Editor::SaveMap()
 			for (TileRow::size_type x = 0; x < tileLayerTop[y].size(); x++)
 			{
 				int ID = tileLayerTop[y][x]->GetID();
-				if (mapType == "Museum" && ID < 1000)
-					ID += 3 * 20;
 				if (ID < 10)
 					outputFile << "0" << ID << " ";
 				else
