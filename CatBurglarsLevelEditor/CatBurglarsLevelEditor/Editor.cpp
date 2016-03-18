@@ -339,6 +339,7 @@ void Editor::Update()
 							//Guard
 							object = new Object(tileLayerBottom[y][x]->GetPosition(), sf::IntRect(0, 0, 0, 0), selectedLayer, selectedTileID, 10, "null", "null", -1, &textures);
 							object->SetScript(ScriptSet(0));
+							object->SetChannel(ChannelSet(5));
 						}
 						if (selectedTileID == 6)
 						{
@@ -1212,9 +1213,14 @@ int Editor::ChannelSet(int type)
 				cout << "Please enter the Hint ID number you wish to use." << endl;
 				cin >> channel;
 			}
-			else
+			else if (type == 4)
 			{
 				cout << "Please enter the Checkpoint number you wish to use." << endl;
+				cin >> channel;
+			}
+			else
+			{
+				cout << "Please enter the Guard type number you wish to use." << endl;
 				cin >> channel;
 			}
 		}
